@@ -1,0 +1,32 @@
+flowchart TD
+    Start([@EnableAspectJAutoProxy 启动]) --> Scan[扫描 @Aspect 注解的类]
+
+    Scan --> Parse[AnnotationAwareAspectJAutoProxyCreator<br/>解析 @Pointcut / @Before / @After / @Around]
+    Parse --> Register[注册为 Advisor Bean]
+
+    Register --> Instance[refresh 第 11 步<br/>实例化所有单例 Bean]
+
+    Instance --> Check{该 Bean 是否<br/>匹配某个 Advisor?}
+
+    Check -->|否| NoProxy[保持原 Bean]
+    Check -->|是| Proxy[AnnotationAwareAspectJAutoProxyCreator<br/>postProcessAfterInitialization<br/>创建代理对象]
+
+    Proxy --> Strategy{目标类是否实现接口?}
+
+    Strategy -->|是| JDK[JDK 动态代理]
+    Strategy -->|否| CGLIB[CGLIB 子类代理]
+
+    JDK --> Replace[用代理对象替换容器中的 Bean]
+    CGLIB --> Replace
+    NoProxy --> Done([Bean 就绪])
+
+    Replace --> Runtime[运行时: 任何方法调用<br/>进入 ReflectiveMethodInvocation]
+    Runtime --> Chain[按 Advisor 顺序执行 Advice 链]
+    Chain --> Target[最终调用目标方法]
+    Target --> Done2([方法返回 / 异常处理])
+
+    classDef startNode fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef proxyNode fill:#fff3e0,stroke:#ef6c00
+    classDef terminalNode fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    class Start,Done,Done2 startNode
+    class Proxy,JDK,CGLIB,Replace,Runtime,Chain proxyNode

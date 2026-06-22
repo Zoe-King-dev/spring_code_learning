@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant App as Spring Boot 启动
+    participant Auto as MybatisAutoConfiguration
+    participant Scan as MapperScannerConfigurer
+    participant FactoryBean as MapperFactoryBean
+    participant SSF as SqlSessionFactoryBean
+    participant SS as SqlSessionFactory
+    participant Mapper as Mapper 接口
+
+    App->>Auto: 触发 @EnableAutoConfiguration
+    Auto->>SSF: 创建 SqlSessionFactoryBean
+    SSF->>SSF: 加载 mybatis-config.xml<br/>解析 MapperLocations<br/>解析 TypeAliases
+    SSF->>SS: getObject() → build SqlSessionFactory
+    SS-->>SSF: 初始化完成
+    SSF-->>App: 注册 SqlSessionFactory 单例
+
+    App->>Scan: 扫描 @MapperScan 指定的包
+    loop 每个 Mapper 接口
+        Scan->>FactoryBean: 创建 MapperFactoryBean
+        FactoryBean->>SS: openSession()
+        SS-->>FactoryBean: SqlSession
+        FactoryBean->>Mapper: 创建 JDK 动态代理
+        Mapper-->>FactoryBean: 代理对象
+        FactoryBean-->>App: 注册为 Bean
+    end
+
+    Note over App,Mapper: 调用 Mapper.method() 时<br/>代理对象 → SqlSession → Executor<br/>→ StatementHandler → JDBC 执行 SQL

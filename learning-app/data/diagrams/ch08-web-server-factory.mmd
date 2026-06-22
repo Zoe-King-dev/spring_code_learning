@@ -1,0 +1,24 @@
+flowchart TD
+    Start([WebServerFactory 装配]) --> Cond{classpath 中<br/>存在哪个容器?}
+
+    Cond -->|"org.apache.catalina.*<br/>org.apache.catalina.startup.Tomcat"| Tomcat[TomcatServletWebServerFactory]
+    Cond -->|"org.eclipse.jetty.*"| Jetty[JettyServletWebServerFactory]
+    Cond -->|"io.undertow.*"| Undertow[UndertowServletWebServerFactory]
+    Cond -->|"都不存在"| None[报错:<br/>缺少嵌入式容器依赖]
+
+    Tomcat --> Use[默认装配 Tomcat]
+    Jetty --> Ex1[需排除 Tomcat 依赖]
+    Undertow --> Ex2[需排除 Tomcat 依赖]
+
+    Use --> Common[通过 @ConditionalOnMissingBean<br/>允许用户自定义覆盖]
+    Ex1 --> Common
+    Ex2 --> Common
+    None --> End([应用启动失败])
+    Common --> End2([createWebServer 使用工厂])
+
+    classDef condNode fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef factoryNode fill:#e3f2fd,stroke:#1565c0
+    classDef failNode fill:#ffebee,stroke:#c62828
+    class Cond condNode
+    class Tomcat,Jetty,Undertow,Common factoryNode
+    class None,End failNode

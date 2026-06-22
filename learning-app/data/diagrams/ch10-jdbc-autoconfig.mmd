@@ -1,0 +1,59 @@
+classDiagram
+    class DataSourceAutoConfiguration {
+        <<@Configuration>>
+        +DataSource dataSource()
+        +EmbeddedDatabase embeddedDataSource()
+    }
+
+    class DataSource {
+        <<interface>>
+        +getConnection() Connection
+    }
+
+    class HikariDataSource {
+        -config HikariConfig
+        +getConnection() Connection
+    }
+
+    class JdbcTemplateAutoConfiguration {
+        <<@Configuration>>
+        +JdbcTemplate jdbcTemplate(DataSource)
+    }
+
+    class JdbcTemplate {
+        +query(sql, RowMapper) List
+        +update(sql, args) int
+        +execute(sql) void
+    }
+
+    class TransactionAutoConfiguration {
+        <<@Configuration>>
+        +PlatformTransactionManager txManager(DataSource)
+    }
+
+    class PlatformTransactionManager {
+        <<interface>>
+        +getTransaction(def) TransactionStatus
+        +commit(status) void
+        +rollback(status) void
+    }
+
+    class DataSourceTransactionManager {
+        +doBegin()
+        +doCommit()
+    }
+
+    class TransactionInterceptor {
+        +invoke(method) Object
+    }
+
+    DataSource <|.. HikariDataSource
+    DataSourceAutoConfiguration ..> DataSource : 创建
+    DataSourceAutoConfiguration --> HikariDataSource : 装配默认
+    JdbcTemplateAutoConfiguration --> DataSource : 依赖
+    JdbcTemplateAutoConfiguration ..> JdbcTemplate : 创建
+    JdbcTemplate --> DataSource : 依赖
+    TransactionAutoConfiguration --> DataSource : 依赖
+    TransactionAutoConfiguration ..> PlatformTransactionManager : 创建
+    PlatformTransactionManager <|.. DataSourceTransactionManager
+    TransactionInterceptor --> PlatformTransactionManager : 调用

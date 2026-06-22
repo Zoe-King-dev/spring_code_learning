@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant Ctx as ApplicationContext
+    participant Delegate as PostProcessorRegistrationDelegate
+    participant CCP as ConfigurationClassPostProcessor
+    participant Parser as ConfigurationClassParser
+    participant Reader as MetadataReader
+
+    Ctx->>Delegate: invokeBeanFactoryPostProcessors(beanFactory)
+    Delegate->>CCP: postProcessBeanDefinitionRegistry
+
+    CCP->>Parser: parse(candidate)
+
+    loop 候选 @Configuration 类
+        Parser->>Reader: 读取 @Component / @ComponentScan
+        Parser->>Parser: 处理 @Import 四种导入方式
+        Parser->>Parser: 处理 @Bean 方法
+        Parser->>Parser: 处理 @PropertySource
+        Parser->>Parser: 处理 @Profile 条件
+    end
+
+    Parser-->>CCP: 解析后的 ConfigurationClass 集合
+
+    loop 每个 ConfigurationClass
+        CCP->>CCP: loadBeanDefinitions<br/>注册所有 BeanDefinition
+    end
+
+    CCP-->>Delegate: 完成
+    Delegate-->>Ctx: 容器中已有所有配置类的 BeanDefinition
+
+    Note over Ctx,CCP: 此流程完成后，@ComponentScan 扫到的类、<br/>@Import 引入的类、@Bean 方法都已在容器中<br/>等待第 11 步 finishBeanFactoryInitialization 实例化

@@ -1,0 +1,24 @@
+flowchart TD
+    Start([java -jar app.jar]) --> Manifest[读取 META-INF/MANIFEST.MF<br/>Main-Class: org.springframework.boot.loader.JarLauncher]
+    Manifest --> Launcher[JarLauncher.main]
+
+    Launcher --> Custom[创建自定义类加载器<br/>LaunchedURLClassLoader]
+
+    Custom --> Load1[扫描 BOOT-INF/lib/*.jar<br/>得到所有依赖 URL]
+    Custom --> Load2[扫描 BOOT-INF/classes/<br/>得到应用类路径]
+
+    Load1 --> Loader[注册到 LaunchedURLClassLoader<br/>父类加载器 = ExtClassLoader]
+    Load2 --> Loader
+
+    Loader --> Runner[MainMethodRunner.run]
+    Runner --> Main[反射调用 META-INF/MANIFEST.MF 中<br/>Start-Class 指定的 main 方法]
+
+    Main --> Spring[SpringApplication.run]
+    Spring --> End([应用启动完成])
+
+    classDef startNode fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef loaderNode fill:#fff3e0,stroke:#ef6c00
+    classDef endNode fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    class Start,End startNode
+    class Custom,Loader,Runner loaderNode
+    class Manifest,Load1,Load2,Main,Spring endNode

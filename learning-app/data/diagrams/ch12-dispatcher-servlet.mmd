@@ -1,0 +1,32 @@
+sequenceDiagram
+    participant Client
+    participant DS as DispatcherServlet
+    participant HM as HandlerMapping
+    participant HA as HandlerAdapter
+    participant Handler as @Controller 方法
+    participant VR as ViewResolver
+    participant View as 视图
+
+    Client->>DS: HTTP 请求
+    DS->>DS: doService → doDispatch
+    DS->>HM: getHandler(request)
+    HM-->>DS: HandlerExecutionChain<br/>(Handler + Interceptors)
+
+    DS->>HA: getHandlerAdapter(handler)
+    HA-->>DS: RequestMappingHandlerAdapter
+
+    DS->>HA: handle(request, response, handler)
+    HA->>Handler: invoke(参数解析)
+    Handler-->>HA: @ResponseBody / ModelAndView
+
+    alt 返回视图名
+        HA->>VR: resolveViewName(name)
+        VR-->>HA: View 对象
+        HA->>View: render()
+    else 直接返回数据
+        HA-->>DS: 写入 Response Body
+    end
+
+    DS-->>Client: HTTP 响应
+
+    Note over DS,View: 三大组件：<br/>HandlerMapping（找 Handler）<br/>HandlerAdapter（执行 Handler）<br/>ViewResolver（解析视图）

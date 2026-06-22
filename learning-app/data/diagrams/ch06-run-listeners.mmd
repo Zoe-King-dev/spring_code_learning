@@ -1,0 +1,31 @@
+sequenceDiagram
+    participant App as SpringApplication
+    participant Listener as SpringApplicationRunListener
+    participant Ctx as ApplicationContext
+
+    Note over App: 1. 启动阶段
+    App->>Listener: starting(bootstrapContext, mainClass)
+    Listener-->>App: 监听 ApplicationStartingEvent
+
+    Note over App: 2. 环境准备完成
+    App->>Listener: environmentPrepared(bootstrap, env)
+    Listener-->>App: 监听 ApplicationEnvironmentPreparedEvent
+
+    Note over App: 3. 上下文准备完成
+    App->>Listener: contextPrepared(context)
+    Note right of Listener: 在 context 刷新前<br/>最早能做 Bean 操作的时机
+
+    Note over App: 4. 上下文加载完成
+    App->>Listener: contextLoaded(context)
+    Note right of Listener: BeanDefinition 已注册<br/>但尚未实例化
+
+    Note over App: 5. 刷新完成
+    App->>Listener: contextRefreshed(context)
+
+    Note over App: 6. 启动完成（Runner 执行前）
+    App->>Listener: started(context, timeTaken)
+
+    Note over App: 7. 全部就绪
+    App->>Listener: running(context)
+    Listener-->>Ctx: 监听 ApplicationReadyEvent
+    Note over Ctx: 应用进入服务状态

@@ -1,0 +1,26 @@
+sequenceDiagram
+    participant Caller as 调用方
+    participant Proxy as 代理对象
+    participant RMI as ReflectiveMethodInvocation
+    participant Adv1 as @Before Advice
+    participant Adv2 as @Around Advice
+    participant Target as 目标方法
+    participant Adv3 as @After Advice
+    participant Adv4 as @AfterReturning Advice
+
+    Caller->>Proxy: method()
+    Proxy->>RMI: proceed()
+    RMI->>Adv1: before()
+    Adv1-->>RMI: 继续
+    RMI->>Adv2: around(proceed)
+    Adv2->>Target: invoke()
+    Target-->>Adv2: result
+    Adv2->>Adv3: after()
+    Adv3-->>Adv2: 继续
+    Adv2->>Adv4: afterReturning(result)
+    Adv4-->>Adv2: 继续
+    Adv2-->>RMI: result
+    RMI-->>Proxy: result
+    Proxy-->>Caller: result
+
+    Note over Adv1,Adv4: Advice 链按 Advisor 顺序递归执行<br/>任意 Advice 抛异常会跳过后续 Advice<br/>进入 @AfterThrowing 链

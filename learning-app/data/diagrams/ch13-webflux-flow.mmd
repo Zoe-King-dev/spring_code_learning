@@ -1,0 +1,27 @@
+flowchart TD
+    Start([HTTP 请求]) --> Netty[Netty Server<br/>Reactor Netty]
+    Netty --> DH[DispatcherHandler]
+
+    DH --> HM[RouterFunctionMapping<br/>或 RequestMappingHandlerMapping]
+    HM --> HF[HandlerFunction<br/>或 HandlerMethod]
+
+    DH --> Invoker[HandlerAdapter<br/>invokeHandler]
+    Invoker --> H[调用业务方法<br/>返回 Mono/Flux]
+
+    H --> Result[HandlerResult]
+    Result --> R[ResultHandler<br/>ServerResponse]
+
+    R --> Resp[Response]
+
+    subgraph BackPressure["背压（Backpressure）"]
+        Note[Mono 是 0/1 个元素<br/>Flux 是 0/N 个元素<br/>Subscriber 主动请求 n 个]
+    end
+
+    H -.背压.-> BackPressure
+
+    classDef startNode fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef handlerNode fill:#fff3e0,stroke:#ef6c00
+    classDef reactiveNode fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    class Start startNode
+    class Netty,DH,HM,Invoker handlerNode
+    class H,Result,R,Resp reactiveNode

@@ -1,0 +1,32 @@
+sequenceDiagram
+    participant OS as 操作系统
+    participant App as Spring Boot 应用
+    participant GS as WebServerGracefulShutdownLifecycle
+    participant WS as WebServer
+    participant Conn as Connector
+    participant Req as 在途请求
+
+    Note over App: server.shutdown=graceful<br/>spring.lifecycle.timeout-per-shutdown-phase=30s
+
+    OS->>App: SIGTERM
+    App->>App: 关闭钩子触发
+    App->>GS: stop()
+
+    GS->>WS: shutDownGracefully(callback)
+    Note right of WS: 1. 停止接收新连接
+    WS->>Conn: pause()
+    Conn-->>WS: 监听暂停
+
+    Note over GS,Req: 2. 等待在途请求完成
+    loop 最多等 30s
+        GS->>WS: check()
+        WS-->>GS: 还有 N 个在途请求
+    end
+
+    GS->>WS: 强制关闭 (timeout)
+    WS->>Conn: stop()
+    Conn-->>WS: 端口释放
+
+    GS->>App: callback.onShutdown()
+    App->>App: 关闭 ApplicationContext
+    App-->>OS: 进程退出 (exit 0)

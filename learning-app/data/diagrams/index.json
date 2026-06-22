@@ -43,5 +43,93 @@
       "title": "AOP 代理创建流程",
       "description": "Spring 根据是否实现接口选择 JDK 动态代理或 CGLIB 子类代理。"
     }
+  ],
+  "06": [
+    {
+      "file": "ch06-prepare-environment.mmd",
+      "title": "prepareEnvironment 流程",
+      "description": "根据 WebApplicationType 装配 StandardEnvironment，加载 application.yml / properties 并合并 PropertySource 链。"
+    },
+    {
+      "file": "ch06-run-listeners.mmd",
+      "title": "SpringApplicationRunListener 事件流",
+      "description": "从 starting 到 running 七大事件贯穿应用启动全过程。"
+    }
+  ],
+  "07": [
+    {
+      "file": "ch07-refresh-steps.mmd",
+      "title": "refresh() 13 步总览",
+      "description": "AbstractApplicationContext.refresh 的 13 个关键步骤，其中 5/9/11 是 IOC 的核心战场。"
+    },
+    {
+      "file": "ch07-config-post-processor.mmd",
+      "title": "ConfigurationClassPostProcessor 处理流程",
+      "description": "refresh 第 5 步的真正主角：解析 @Configuration / @Import / @Bean / @ComponentScan 并注册 BeanDefinition。"
+    }
+  ],
+  "08": [
+    {
+      "file": "ch08-tomcat-architecture.mmd",
+      "title": "嵌入式 Tomcat 组件结构",
+      "description": "Tomcat → Service → Connector / Engine → Host → TomcatEmbeddedContext → DispatcherServlet。"
+    },
+    {
+      "file": "ch08-web-server-factory.mmd",
+      "title": "WebServerFactory 工厂选择",
+      "description": "通过 @ConditionalOnClass 在 Tomcat / Jetty / Undertow 三个工厂中按 classpath 自动选择。"
+    }
+  ],
+  "09": [
+    {
+      "file": "ch09-aop-lifecycle.mmd",
+      "title": "AOP 代理织入完整生命周期",
+      "description": "从 @EnableAspectJAutoProxy 启动到运行时拦截器链的完整流程。"
+    },
+    {
+      "file": "ch09-aop-interceptor-chain.mmd",
+      "title": "AOP 拦截器链时序",
+      "description": "ReflectiveMethodInvocation 递归执行 Before / Around / After / AfterReturning 的时序。"
+    }
+  ],
+  "10": [
+    {
+      "file": "ch10-jdbc-autoconfig.mmd",
+      "title": "JDBC 自动装配类图",
+      "description": "DataSource / HikariDataSource / JdbcTemplate / PlatformTransactionManager 自动装配关系。"
+    }
+  ],
+  "11": [
+    {
+      "file": "ch11-mybatis-init.mmd",
+      "title": "SqlSessionFactory 初始化时序",
+      "description": "从 @MapperScan 扫描到 Mapper 代理对象注册的完整流程。"
+    }
+  ],
+  "12": [
+    {
+      "file": "ch12-dispatcher-servlet.mmd",
+      "title": "DispatcherServlet 请求处理流",
+      "description": "WebMvc 三大组件 HandlerMapping / HandlerAdapter / ViewResolver 协作完成 HTTP 请求。"
+    }
+  ],
+  "13": [
+    {
+      "file": "ch13-webflux-flow.mmd",
+      "title": "WebFlux 响应式处理流",
+      "description": "Netty → DispatcherHandler → RouterFunction → Mono/Flux，响应式栈的核心路径。"
+    }
+  ],
+  "14": [
+    {
+      "file": "ch14-jar-launcher.mmd",
+      "title": "可执行 jar 启动流程",
+      "description": "java -jar → JarLauncher → LaunchedURLClassLoader → MainMethodRunner → SpringApplication.run。"
+    },
+    {
+      "file": "ch14-graceful-shutdown.mmd",
+      "title": "优雅停机时序",
+      "description": "SIGTERM → 停止接收新连接 → 等待在途请求完成 → 释放端口 → Context 关闭。"
+    }
   ]
 }

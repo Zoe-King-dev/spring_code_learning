@@ -1,0 +1,22 @@
+flowchart TD
+    Start([AbstractApplicationContext.refresh]) --> S1[1. prepareRefresh<br/>设置活动状态、初始化 PropertySources]
+    S1 --> S2[2. obtainFreshBeanFactory<br/>获取 ConfigurableListableBeanFactory]
+    S2 --> S3[3. prepareBeanFactory<br/>注册系统 Bean / 忽略 Aware]
+    S3 --> S4[4. postProcessBeanFactory<br/>子类扩展点]
+    S4 --> S5["5. invokeBeanFactoryPostProcessors<br/>⭐ ConfigurationClassPostProcessor 在此解析"]
+    S5 --> S6[6. registerBeanPostProcessors<br/>注册各种 BPP 实例]
+    S6 --> S7[7. initMessageSource<br/>国际化]
+    S7 --> S8[8. initApplicationEventMulticaster<br/>事件多播器]
+    S8 --> S9["9. onRefresh<br/>⭐ 启动嵌入式 Web 容器"]
+    S9 --> S10[10. registerListeners<br/>注册 ApplicationListener]
+    S10 --> S11["11. finishBeanFactoryInitialization<br/>⭐ 实例化所有非懒加载单例 Bean"]
+    S11 --> S12[12. finishRefresh<br/>发布 ContextRefreshedEvent]
+    S12 --> S13[13. resetCommonCaches<br/>清空反射 / 注解缓存]
+    S13 --> End([refresh 完成])
+
+    classDef coreNode fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef stepNode fill:#e3f2fd,stroke:#1565c0
+    classDef terminalNode fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    class S5,S9,S11 coreNode
+    class S1,S2,S3,S4,S6,S7,S8,S10,S12,S13 stepNode
+    class Start,End terminalNode
