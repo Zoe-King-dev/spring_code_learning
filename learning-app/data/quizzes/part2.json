@@ -66,7 +66,7 @@
           "id": "p2-005",
           "type": "single",
           "difficulty": "medium",
-          "question": "AOP Advice 的"环绕"逻辑由谁实际驱动？",
+          "question": "AOP Advice 的“环绕”逻辑由谁实际驱动？",
           "options": [
             { "id": "A", "text": "ReflectiveMethodInvocation.proceed()" },
             { "id": "B", "text": "BeanPostProcessor 直接调用" },

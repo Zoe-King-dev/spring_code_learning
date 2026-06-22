@@ -19,6 +19,36 @@
           "correctAnswer": ["A"],
           "explanation": "Joinpoint 是程序执行过程中可被拦截的点，Spring AOP 仅支持方法级的连接点（即方法调用）。Pointcut 是连接点的筛选规则，Advice 是织入的逻辑，Aspect 是 Pointcut + Advice 的组合。",
           "referenceAnchor": "51-aop-概述"
+        },
+        {
+          "id": "05-004",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring AOP 的\"切点（Pointcut）\"与\"通知（Advice）\"的关系是？",
+          "options": [
+            { "id": "A", "text": "前者定义\"拦截哪些方法\"，后者定义\"拦截后做什么\"" },
+            { "id": "B", "text": "二者等价" },
+            { "id": "C", "text": "前者定义\"拦截后做什么\"，后者定义\"拦截哪些方法\"" },
+            { "id": "D", "text": "二者无任何关系" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "Pointcut 用表达式（execution / within / @annotation）筛选方法，Advice 是匹配后实际织入的逻辑。两者组合成 Advisor。",
+          "referenceAnchor": "51-aop-概述"
+        },
+        {
+          "id": "05-005",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "@Aspect 标注的类要被 Spring AOP 识别，还需要哪个注解开启？",
+          "options": [
+            { "id": "A", "text": "@EnableAspectJAutoProxy" },
+            { "id": "B", "text": "@Component" },
+            { "id": "C", "text": "@Configuration" },
+            { "id": "D", "text": "@Bean" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "@EnableAspectJAutoProxy 触发 AspectJAutoProxyCreator 注册，它才会扫描 @Aspect 类并织入切面。在 Spring Boot 中可省略——AOP starter 自动装配默认开启。",
+          "referenceAnchor": "51-aop-概述"
         }
       ]
     },
@@ -53,6 +83,51 @@
           ],
           "correctAnswer": ["A", "B", "C", "D"],
           "explanation": "Spring AOP 支持五种 Advice：@Before、@After、@AfterReturning、@AfterThrowing、@Around。其中 @Around 最强大，可以决定是否执行目标方法并修改返回值。",
+          "referenceAnchor": "52-aop-代理机制"
+        },
+        {
+          "id": "05-008",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring AOP 中引入（Introduction）增强的作用是？",
+          "options": [
+            { "id": "A", "text": "拦截方法调用" },
+            { "id": "B", "text": "动态为目标对象添加额外的接口实现（无需修改源码）" },
+            { "id": "C", "text": "提高方法执行速度" },
+            { "id": "D", "text": "自动生成单元测试" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Introduction（引介增强）是 AOP 的特殊能力——通过 @DeclareParents 让目标 Bean 在不修改源码的前提下实现额外接口，等价于 mixin。",
+          "referenceAnchor": "52-aop-代理机制"
+        },
+        {
+          "id": "05-006",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "Spring AOP 与 AspectJ 的核心区别是？",
+          "options": [
+            { "id": "A", "text": "二者完全等价" },
+            { "id": "B", "text": "Spring AOP 是运行时通过代理实现（仅方法拦截）；AspectJ 是编译期/类加载期通过字节码织入（支持字段/构造器/静态初始化等）" },
+            { "id": "C", "text": "Spring AOP 性能更好" },
+            { "id": "D", "text": "AspectJ 不支持 @Aspect 注解" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring AOP 是基于代理的轻量级 AOP 框架，仅支持方法级别的 joinpoint；AspectJ 是功能完整的 AOP 实现，可在编译/类加载期通过字节码织入支持更细粒度的 joinpoint。",
+          "referenceAnchor": "52-aop-代理机制"
+        },
+        {
+          "id": "05-007",
+          "type": "fill-blank",
+          "difficulty": "hard",
+          "question": "补全 AnnotationAwareAspectJAutoProxyCreator 创建代理的关键调用",
+          "lang": "java",
+          "code": "protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {\n    if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {\n        return bean;  // 基础设施 Bean 不代理\n    }\n    Object[] specificInterceptors = ___1___(bean.getClass(), beanName, null);\n    if (specificInterceptors == DO_NOT_PROXY) {\n        return bean;\n    }\n    Object proxy = ___2___(bean.getClass(), beanName, specificInterceptors,\n                           new SingletonTargetSource(bean));\n    return proxy;\n}",
+          "blanks": [
+            { "id": "1", "answer": "getAdvicesAndAdvisorsForBean", "hint": "查找适用于当前 Bean 的 Advisor" },
+            { "id": "2", "answer": "createProxy", "hint": "创建代理对象" }
+          ],
+          "caseSensitive": false,
+          "explanation": "wrapIfNecessary 的逻辑：先 getAdvicesAndAdvisorsForBean 查 Advisor，没找到直接返回原 Bean；找到则 createProxy 通过 ProxyFactory 生成代理对象。",
           "referenceAnchor": "52-aop-代理机制"
         }
       ]

@@ -34,12 +34,87 @@
           "correctAnswer": ["C"],
           "explanation": "finishBeanFactoryInitialization 调用 beanFactory.preInstantiateSingletons()，实例化所有非懒加载的单例 Bean。finishRefresh 主要负责发布 ContextRefreshedEvent。",
           "referenceAnchor": "71-refresh-的-13-个步骤"
+        },
+        {
+          "id": "07-003",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "refresh() 中第 9 步 onRefresh 是哪个类的扩展点？",
+          "options": [
+            { "id": "A", "text": "AbstractApplicationContext 默认空实现" },
+            { "id": "B", "text": "ServletWebServerApplicationContext 在此启动嵌入式 Web 容器" },
+            { "id": "C", "text": "GenericApplicationContext 不支持扩展" },
+            { "id": "D", "text": "AnnotationConfigApplicationContext 在此扫描 @ComponentScan" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "onRefresh 是 AbstractApplicationContext 的空方法钩子；ServletWebServerApplicationContext 重写它并调用 createWebServer() 启动嵌入式 Tomcat/Jetty/Undertow。",
+          "referenceAnchor": "71-refresh-的-13-个步骤"
+        },
+        {
+          "id": "07-004",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "ConfigurationClassPostProcessor 在 refresh 流程中的主要作用是？",
+          "options": [
+            { "id": "A", "text": "处理 AOP 代理" },
+            { "id": "B", "text": "解析 @Configuration 类，处理 @ComponentScan、@Import、@Bean 等注解并注册 BeanDefinition" },
+            { "id": "C", "text": "管理事务" },
+            { "id": "D", "text": "处理 HTTP 请求" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "ConfigurationClassPostProcessor 是 Spring 最重要的 BFPP 之一，它把 @Configuration / @ComponentScan / @Import / @Bean 方法等转换为 BeanDefinition 并注册到 BeanFactory。",
+          "referenceAnchor": "71-refresh-的-13-个步骤"
+        },
+        {
+          "id": "07-005",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors 的实现里，会先执行哪一类 BFPP？",
+          "options": [
+            { "id": "A", "text": "用户自定义的 BeanFactoryPostProcessor" },
+            { "id": "B", "text": "BeanDefinitionRegistryPostProcessor（先于普通 BFPP 执行，能注册新的 BeanDefinition）" },
+            { "id": "C", "text": "BeanPostProcessor" },
+            { "id": "D", "text": "ApplicationListener" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "PostProcessorRegistrationDelegate 严格按以下顺序处理：① 直接实现 PriorityOrdered 的 BeanDefinitionRegistryPostProcessor → ② 实现 Ordered 的 BeanDefinitionRegistryPostProcessor → ③ 普通 BeanDefinitionRegistryPostProcessor → ④ 普通 BeanFactoryPostProcessor。",
+          "referenceAnchor": "71-refresh-的-13-个步骤"
         }
       ]
     },
     {
       "sectionAnchor": "72-refresh-代码精读",
       "questions": [
+        {
+          "id": "07-006",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "finishBeanFactoryInitialization(beanFactory) 内部最后调用的是？",
+          "options": [
+            { "id": "A", "text": "beanFactory.freezeConfiguration()" },
+            { "id": "B", "text": "beanFactory.preInstantiateSingletons()" },
+            { "id": "C", "text": "beanFactory.getBean(name)" },
+            { "id": "D", "text": "beanFactory.destroySingletons()" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "preInstantiateSingletons 遍历所有非懒加载单例 BeanDefinition，逐一调用 getBean() 触发完整 Bean 生命周期。freezeConfiguration 只锁定 BeanDefinition 修改，不创建实例。",
+          "referenceAnchor": "72-refresh-代码精读"
+        },
+        {
+          "id": "07-007",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "finishRefresh() 中发布的最后事件是？",
+          "options": [
+            { "id": "A", "text": "ApplicationStartedEvent" },
+            { "id": "B", "text": "ApplicationReadyEvent" },
+            { "id": "C", "text": "ContextRefreshedEvent" },
+            { "id": "D", "text": "ContextClosedEvent" }
+          ],
+          "correctAnswer": ["C"],
+          "explanation": "finishRefresh() 内部调用 publishEvent(new ContextRefreshedEvent(this))，通知所有监听器 IOC 容器已就绪。ApplicationReadyEvent 是 SpringApplication.run 末尾发布的另一个事件。",
+          "referenceAnchor": "72-refresh-代码精读"
+        },
         {
           "id": "07-fill-001",
           "type": "fill-blank",
@@ -55,6 +130,21 @@
           "caseSensitive": false,
           "explanation": "refresh() 13 步中前 5 步分别是：prepareRefresh / obtainFreshBeanFactory / prepareBeanFactory / postProcessBeanFactory / invokeBeanFactoryPostProcessors。",
           "referenceAnchor": "72-refresh-代码精读"
+        },
+        {
+          "id": "07-008",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "registerBeanPostProcessors 与 registerListeners 的执行顺序是？",
+          "options": [
+            { "id": "A", "text": "registerBeanPostProcessors 先（第 6 步）" },
+            { "id": "B", "text": "registerListeners 先（第 10 步）" },
+            { "id": "C", "text": "二者顺序无所谓" },
+            { "id": "D", "text": "二者同时执行" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "registerBeanPostProcessors 在第 6 步执行——把 BPP 实例化并注册到 BeanFactory（注意是注册，不是触发）；registerListeners 在第 10 步执行——把 ApplicationListener 注册到事件广播器。",
+          "referenceAnchor": "71-refresh-的-13-个步骤"
         }
       ]
     }

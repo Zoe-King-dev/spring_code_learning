@@ -19,6 +19,51 @@
           "correctAnswer": ["B"],
           "explanation": "BeanFactory 是 Spring IOC 容器的根接口，定义了 getBean / containsBean / isSingleton 等核心方法。ApplicationContext 是其子接口，提供更多企业级功能。",
           "referenceAnchor": "31-ioc-容器概述"
+        },
+        {
+          "id": "03-004",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "ApplicationContext 相比 BeanFactory 多提供了哪些能力？（多选语义，但本题为单选最关键项）",
+          "options": [
+            { "id": "A", "text": "getBean()" },
+            { "id": "B", "text": "事件发布 / 国际化 / 资源加载" },
+            { "id": "C", "text": "toString()" },
+            { "id": "D", "text": "hashCode()" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "ApplicationContext 在 BeanFactory 基础上扩展了 ApplicationEventPublisher（事件）、MessageSource（国际化）、ResourceLoader（资源加载）等企业级能力。",
+          "referenceAnchor": "31-ioc-容器概述"
+        },
+        {
+          "id": "03-005",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "BeanDefinition 的作用是？",
+          "options": [
+            { "id": "A", "text": "存放 Bean 的运行时实例" },
+            { "id": "B", "text": "描述 Bean 的元数据（类名、作用域、依赖、初始化方法等）" },
+            { "id": "C", "text": "存储 Bean 的属性值" },
+            { "id": "D", "text": "实现 AOP 代理" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "BeanDefinition 是 Bean 的\"图纸\"，在实例化前就已被解析并注册到 BeanFactory，描述了这个 Bean 是什么、怎么创建、有什么依赖。",
+          "referenceAnchor": "31-ioc-容器概述"
+        },
+        {
+          "id": "03-006",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列哪些是 Spring 提供的常用 Aware 接口？（多选）",
+          "options": [
+            { "id": "A", "text": "BeanNameAware" },
+            { "id": "B", "text": "ApplicationContextAware" },
+            { "id": "C", "text": "BeanFactoryAware" },
+            { "id": "D", "text": "SerializableAware" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "Spring 提供多种 Aware 让 Bean 在初始化时拿到容器资源：BeanNameAware（自己的名字）、BeanFactoryAware（所属工厂）、ApplicationContextAware（所属上下文）。SerializableAware 不存在。",
+          "referenceAnchor": "32-bean-的生命周期"
         }
       ]
     },
@@ -54,6 +99,52 @@
           "correctAnswer": ["B"],
           "explanation": "Spring 通过三级缓存解决单例 Bean 的循环依赖：一级缓存 singletonObjects（成品）、二级缓存 earlySingletonObjects（半成品）、三级缓存 singletonFactories（工厂）。",
           "referenceAnchor": "32-bean-的生命周期"
+        },
+        {
+          "id": "03-007",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "BeanPostProcessor 的 postProcessAfterInitialization 阶段最常被用于实现什么？",
+          "options": [
+            { "id": "A", "text": "数据库连接" },
+            { "id": "B", "text": "AOP 代理织入" },
+            { "id": "C", "text": "日志输出" },
+            { "id": "D", "text": "事务开启" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "AnnotationAwareAspectJAutoProxyCreator 在 BPP.postProcessAfterInitialization 中检查是否需要为 Bean 创建代理，是 AOP 代理织入的实际时机。",
+          "referenceAnchor": "32-bean-的生命周期"
+        },
+        {
+          "id": "03-008",
+          "type": "fill-blank",
+          "difficulty": "hard",
+          "question": "补全 AbstractBeanFactory.getBean 主流程中的关键调用",
+          "lang": "java",
+          "code": "protected <T> T doGetBean(String name, Class<T> type, Object[] args, boolean check) {\n    String beanName = ___1___(name);                       // 处理 & 前缀与别名\n    Object sharedInstance = ___2___(beanName);              // 从单例缓存取\n    if (sharedInstance != null && args == null) {\n        return (T) getObjectForBeanInstance(sharedInstance, name, beanName, null);\n    }\n    if (mbd.isSingleton()) {\n        return (T) ___3___(beanName, mbd, args);            // 创建单例 Bean\n    }\n    ...\n}",
+          "blanks": [
+            { "id": "1", "answer": "transformedBeanName", "hint": "规范化 BeanName 的方法" },
+            { "id": "2", "answer": "getSingleton", "hint": "从单例池取" },
+            { "id": "3", "answer": "createBean", "hint": "创建 Bean 实例" }
+          ],
+          "caseSensitive": false,
+          "explanation": "doGetBean 的骨架：transformedBeanName 处理名称 → getSingleton 从一/二级缓存查找 → 未命中时 createBean 触发完整 Bean 生命周期。",
+          "referenceAnchor": "32-bean-的生命周期"
+        },
+        {
+          "id": "03-009",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring 中 Bean 默认的作用域是？",
+          "options": [
+            { "id": "A", "text": "prototype" },
+            { "id": "B", "text": "singleton" },
+            { "id": "C", "text": "request" },
+            { "id": "D", "text": "session" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring Bean 默认作用域是 singleton（单例），整个容器内共享一个实例。Web 场景下还有 request / session / application 等作用域。",
+          "referenceAnchor": "31-ioc-容器概述"
         }
       ]
     }

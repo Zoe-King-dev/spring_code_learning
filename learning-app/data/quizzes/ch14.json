@@ -19,6 +19,36 @@
           "correctAnswer": ["B"],
           "explanation": "spring-boot-loader 提供 LaunchedURLClassLoader，从 jar 内部的 BOOT-INF/lib 与 BOOT-INF/classes 加载类与资源，绕过标准 jar 嵌套 jar 的限制。",
           "referenceAnchor": "141-打包与运行"
+        },
+        {
+          "id": "14-003",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring Boot fat jar 内部结构中，应用类放在哪个目录？",
+          "options": [
+            { "id": "A", "text": "BOOT-INF/lib" },
+            { "id": "B", "text": "BOOT-INF/classes" },
+            { "id": "C", "text": "META-INF/lib" },
+            { "id": "D", "text": "WEB-INF/classes" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "BOOT-INF/classes 放应用自身 class 与 resources；BOOT-INF/lib 放所有第三方依赖 jar。META-INF/MANIFEST.MF 中 Main-Class 指向 JarLauncher。",
+          "referenceAnchor": "141-打包与运行"
+        },
+        {
+          "id": "14-004",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Maven 中使用 spring-boot-maven-plugin 的哪个 goal 可以生成可执行 jar？",
+          "options": [
+            { "id": "A", "text": "spring-boot:build-image" },
+            { "id": "B", "text": "spring-boot:repackage" },
+            { "id": "C", "text": "spring-boot:run" },
+            { "id": "D", "text": "spring-boot:package" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "spring-boot:repackage 在普通 jar/ war 基础上重打包成可执行 fat jar；spring-boot:run 用于本地运行；spring-boot:build-image 构建 OCI 镜像。",
+          "referenceAnchor": "141-打包与运行"
         }
       ]
     },
@@ -38,6 +68,66 @@
           ],
           "correctAnswer": ["A"],
           "explanation": "server.shutdown=graceful 让嵌入式容器在收到关闭信号时停止接受新请求，等待进行中请求完成；超时由 spring.lifecycle.timeout-per-shutdown-phase 控制。",
+          "referenceAnchor": "142-优雅停机"
+        },
+        {
+          "id": "14-005",
+          "type": "multiple",
+          "difficulty": "hard",
+          "question": "Spring Boot 优雅停机过程中，WebServerGracefulShutdownLifecycle 会执行哪些动作？（多选）",
+          "options": [
+            { "id": "A", "text": "停止接收新连接" },
+            { "id": "B", "text": "等待进行中的请求完成（或超时）" },
+            { "id": "C", "text": "释放端口" },
+            { "id": "D", "text": "自动重启 JVM" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "优雅停机流程：WebServerGracefulShutdownLifecycle.stop() → 容器停止接受新连接 → 等待进行中请求完成（或到达 spring.lifecycle.timeout-per-shutdown-phase 超时）→ 关闭 Connector 释放端口 → 关闭 ApplicationContext。JVM 不会自动重启。",
+          "referenceAnchor": "142-优雅停机"
+        },
+        {
+          "id": "14-006",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring Boot 2.3+ 中触发优雅停机的标准信号是？",
+          "options": [
+            { "id": "A", "text": "调用 System.exit(0)" },
+            { "id": "B", "text": "SIGTERM 信号（容器编排平台如 K8s 默认使用）" },
+            { "id": "C", "text": "关闭 IDE" },
+            { "id": "D", "text": "断网" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring Boot 注册了 JVM shutdown hook，监听 SIGTERM（K8s 默认）和 SIGINT（Ctrl+C），并按 server.shutdown 策略优雅关闭。",
+          "referenceAnchor": "142-优雅停机"
+        },
+        {
+          "id": "14-007",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "spring.lifecycle.timeout-per-shutdown-phase=30s 的含义是？",
+          "options": [
+            { "id": "A", "text": "应用启动 30s 超时" },
+            { "id": "B", "text": "每个 SmartLifecycle Phase 的停止操作最多等 30s" },
+            { "id": "C", "text": "HTTP 请求最多 30s" },
+            { "id": "D", "text": "数据库连接池 30s 后关闭" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring SmartLifecycle 按 phase 倒序停止，每个 phase 有独立的超时时间。WebServerGracefulShutdownLifecycle 的 phase 比较晚，给它足够时间等待在途请求。",
+          "referenceAnchor": "142-优雅停机"
+        },
+        {
+          "id": "14-008",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring Boot 应用部署到 K8s 时，配合 readiness/liveness 探针最推荐的做法是？",
+          "options": [
+            { "id": "A", "text": "禁用 K8s 探针" },
+            { "id": "B", "text": "通过 spring-boot-starter-actuator 暴露 /actuator/health/readiness 与 /actuator/health/liveness" },
+            { "id": "C", "text": "用 curl 命令行代替" },
+            { "id": "D", "text": "暴露 / 根路径即可" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "spring-boot-starter-actuator 在 K8s 场景下暴露专门的 readiness（就绪接受流量）与 liveness（存活需要重启）端点。配合 management.endpoint.health.probes.enabled=true 与 management.health.livenessstate.enabled=true 即可启用。",
           "referenceAnchor": "142-优雅停机"
         }
       ]

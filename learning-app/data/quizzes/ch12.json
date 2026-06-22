@@ -19,6 +19,36 @@
           "correctAnswer": ["B"],
           "explanation": "HandlerMapping（如 RequestMappingHandlerMapping）负责根据请求路径/方法找到匹配的 HandlerMethod。HandlerAdapter 负责真正调用 Handler。",
           "referenceAnchor": "121-dispatcherservlet"
+        },
+        {
+          "id": "12-003",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "DispatcherServlet 在 Spring WebMvc 中的角色类似于 WebFlux 中的哪个组件？",
+          "options": [
+            { "id": "A", "text": "WebHandler" },
+            { "id": "B", "text": "DispatcherHandler" },
+            { "id": "C", "text": "RouterFunction" },
+            { "id": "D", "text": "Reactor Netty" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "DispatcherHandler 是 WebFlux 版的 DispatcherServlet：负责 HandlerMapping 查找、HandlerAdapter 调用、HandlerResult 处理。",
+          "referenceAnchor": "121-dispatcherservlet"
+        },
+        {
+          "id": "12-004",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "HandlerInterceptor 与 Servlet Filter 的本质区别是？",
+          "options": [
+            { "id": "A", "text": "二者完全等价" },
+            { "id": "B", "text": "Filter 是 Servlet 规范组件，运行在 Web 容器层；Interceptor 是 Spring MVC 组件，能访问 HandlerMethod" },
+            { "id": "C", "text": "Interceptor 比 Filter 早执行" },
+            { "id": "D", "text": "Filter 不支持异步请求" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Filter 在 Servlet 容器层面拦截（DoFilter 链），作用范围更广（包括静态资源）；Interceptor 是 Spring MVC 内部机制，能拿到 HandlerMethod、ModelAndView 等 MVC 对象。",
+          "referenceAnchor": "121-dispatcherservlet"
         }
       ]
     },
@@ -38,6 +68,86 @@
           ],
           "correctAnswer": ["A", "B", "C"],
           "explanation": "WebMvcAutoConfiguration 装配 MVC 基础设施：HandlerMapping/Adapter、消息转换器、静态资源映射、视图解析器等。SQL 连接池属于 JDBC 自动装配。",
+          "referenceAnchor": "122-webmvc-autoconfig"
+        },
+        {
+          "id": "12-005",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring Boot 中实现自定义 WebMvc 配置（如拦截器/格式化器）通常通过？",
+          "options": [
+            { "id": "A", "text": "继承 DispatcherServlet" },
+            { "id": "B", "text": "实现 WebMvcConfigurer 接口并标注 @Configuration" },
+            { "id": "C", "text": "修改 application.yml" },
+            { "id": "D", "text": "实现 HandlerInterceptor 即可" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "WebMvcConfigurer 是 Spring MVC 的扩展 SPI，开发者实现它并标注 @Configuration 即可注入拦截器、消息转换器、CORS 映射、静态资源等。",
+          "referenceAnchor": "122-webmvc-autoconfig"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "123-restful",
+      "questions": [
+        {
+          "id": "12-006",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "Spring MVC 中 @RestController 与 @Controller 的区别是？（多选）",
+          "options": [
+            { "id": "A", "text": "@RestController = @Controller + @ResponseBody" },
+            { "id": "B", "text": "@RestController 的方法返回值默认序列化为 JSON / 文本写入 HTTP 响应体" },
+            { "id": "C", "text": "@Controller 必须配合视图解析器才能返回页面" },
+            { "id": "D", "text": "二者完全等价" }
+          ],
+          "correctAnswer": ["A", "B"],
+          "explanation": "@RestController 是组合注解，方法返回值默认走 HttpMessageConverter 写入响应体（JSON 等）。@Controller 默认返回视图名，配合 ViewResolver 解析；想返回数据需额外加 @ResponseBody。",
+          "referenceAnchor": "123-restful"
+        },
+        {
+          "id": "12-007",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "@RequestMapping(\"/users\") 标注在类与方法上，请求 /users/1 由哪个方法处理？",
+          "options": [
+            { "id": "A", "text": "类上的 @RequestMapping" },
+            { "id": "B", "text": "方法上的 @RequestMapping，二者路径拼接" },
+            { "id": "C", "text": "二者优先级相同" },
+            { "id": "D", "text": "Spring MVC 不支持此种组合" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "类级 @RequestMapping 限定基础路径，方法级 @RequestMapping 限定子路径。两者拼接形成完整 URL，例如 \"/users\" + \"/{id}\" = \"/users/1\"。",
+          "referenceAnchor": "123-restful"
+        },
+        {
+          "id": "12-008",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "Spring MVC 中 @RequestBody 的作用是？",
+          "options": [
+            { "id": "A", "text": "把请求体反序列化为方法参数对象" },
+            { "id": "B", "text": "把方法返回值序列化为响应体" },
+            { "id": "C", "text": "从 URL 中提取参数" },
+            { "id": "D", "text": "处理请求头" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "@RequestBody 告诉 Spring 把 HTTP 请求体（Content-Type 决定的格式）通过 HttpMessageConverter 反序列化为方法参数对象。@ResponseBody 反向把返回值写入响应体。",
+          "referenceAnchor": "123-restful"
+        },
+        {
+          "id": "12-009",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring MVC 默认的 JSON 序列化/反序列化库是？",
+          "options": [
+            { "id": "A", "text": "Gson" },
+            { "id": "B", "text": "Jackson（Spring Boot 默认引入 jackson-databind）" },
+            { "id": "C", "text": "Fastjson" },
+            { "id": "D", "text": "Protobuf" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "spring-boot-starter-web 默认依赖 Jackson。通过 MappingJackson2HttpMessageConverter 自动处理 application/json 类型的请求/响应。",
           "referenceAnchor": "122-webmvc-autoconfig"
         }
       ]

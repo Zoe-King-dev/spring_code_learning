@@ -3,7 +3,7 @@
   "title": "第2章 Spring Boot 的自动装配",
   "sections": [
     {
-      "sectionAnchor": "23-模块装配",
+      "sectionAnchor": "21-组件装配",
       "questions": [
         {
           "id": "02-001",
@@ -18,8 +18,43 @@
           ],
           "correctAnswer": ["B"],
           "explanation": "@Import 是模块装配的核心，可以导入普通类、配置类、ImportSelector、ImportBeanDefinitionRegistrar 等四种类型。",
-          "referenceAnchor": "23-模块装配"
+          "referenceAnchor": "21-组件装配"
         },
+        {
+          "id": "02-005",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "下列哪种方式不属于 Spring 推荐的\"组件装配\"？",
+          "options": [
+            { "id": "A", "text": "@Component + @ComponentScan" },
+            { "id": "B", "text": "@Bean 方法在 @Configuration 中" },
+            { "id": "C", "text": "@Import 导入" },
+            { "id": "D", "text": "在代码中直接 new 一个对象赋值给字段" }
+          ],
+          "correctAnswer": ["D"],
+          "explanation": "Spring 的组件装配强调由容器负责对象的创建与管理；直接 new 不在容器管理范围内，无法享受依赖注入、生命周期、AOP 等能力。",
+          "referenceAnchor": "21-组件装配"
+        },
+        {
+          "id": "02-006",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "ImportSelector 与 ImportBeanDefinitionRegistrar 的核心区别是？",
+          "options": [
+            { "id": "A", "text": "前者只能导入 1 个类，后者能导入多个" },
+            { "id": "B", "text": "前者返回类名数组由 Spring 处理，后者直接操作 BeanDefinitionRegistry 注册" },
+            { "id": "C", "text": "前者运行在启动期，后者运行在 refresh 阶段" },
+            { "id": "D", "text": "二者完全等价" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "ImportSelector.selectImports 返回 String[] 由 Spring 后续按 @Configuration 流程处理；ImportBeanDefinitionRegistrar 拿到 Registry 后由开发者手动创建并注册 BeanDefinition，控制粒度更细。",
+          "referenceAnchor": "23-模块装配"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "23-模块装配",
+      "questions": [
         {
           "id": "02-002",
           "type": "multiple",
@@ -33,7 +68,22 @@
           ],
           "correctAnswer": ["A", "B", "C", "D"],
           "explanation": "@Import 支持全部四种导入方式：① 普通类直接注册为 Bean；② @Configuration 类作为配置源；③ ImportSelector 动态返回类名数组；④ ImportBeanDefinitionRegistrar 手动注册 BeanDefinition。",
-          "referenceAnchor": "232-快速体会模块装配"
+          "referenceAnchor": "23-模块装配"
+        },
+        {
+          "id": "02-007",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "AutoConfigurationImportSelector 在 Spring Boot 自动装配中的角色是？",
+          "options": [
+            { "id": "A", "text": "直接实例化所有 Bean" },
+            { "id": "B", "text": "从 spring.factories 读取所有 AutoConfiguration 候选并按 @Conditional 过滤" },
+            { "id": "C", "text": "处理 HTTP 请求" },
+            { "id": "D", "text": "管理事务" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "AutoConfigurationImportSelector 实现 ImportSelector，selectImports 调用 SpringFactoriesLoader.loadFactoryNames(EnableAutoConfiguration.class) 拿到所有候选，再由 ConditionEvaluator 按 @Conditional 过滤。",
+          "referenceAnchor": "23-模块装配"
         }
       ]
     },
@@ -54,6 +104,36 @@
           "correctAnswer": ["B"],
           "explanation": "@ConditionalOnClass 是 Spring Boot 的条件装配注解，当指定类在 classpath 中存在时才会加载对应的自动配置类。",
           "referenceAnchor": "24-条件装配"
+        },
+        {
+          "id": "02-008",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "@ConditionalOnMissingBean 的语义是？",
+          "options": [
+            { "id": "A", "text": "当前 Bean 必须存在" },
+            { "id": "B", "text": "仅在容器中不存在指定类型的 Bean 时，本 Bean 才生效" },
+            { "id": "C", "text": "强制使用 CGLIB 代理" },
+            { "id": "D", "text": "Bean 必须为单例" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "@ConditionalOnMissingBean 用于\"用户未自定义时使用默认实现\"——它让自动配置保持开箱即用，又允许用户通过自定义 Bean 覆盖默认行为。",
+          "referenceAnchor": "24-条件装配"
+        },
+        {
+          "id": "02-009",
+          "type": "multiple",
+          "difficulty": "hard",
+          "question": "下列哪些是 Spring Boot 提供的条件装配注解？（多选）",
+          "options": [
+            { "id": "A", "text": "@ConditionalOnClass" },
+            { "id": "B", "text": "@ConditionalOnBean" },
+            { "id": "C", "text": "@ConditionalOnProperty" },
+            { "id": "D", "text": "@ConditionalOnWebApplication" }
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "Spring Boot 在 Spring 原生 @Conditional 基础上扩展了 20+ @ConditionalOnXxx 注解，覆盖 class/bean/property/web application/resource/spEL 等常见判断维度。",
+          "referenceAnchor": "24-条件装配"
         }
       ]
     },
@@ -73,6 +153,36 @@
           ],
           "correctAnswer": ["B"],
           "explanation": "Spring Boot 使用自己的 SPI 机制 SpringFactoriesLoader，从 META-INF/spring.factories 读取需要加载的自动配置类。",
+          "referenceAnchor": "25-spi机制"
+        },
+        {
+          "id": "02-010",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "spring.factories 文件应放在 classpath 的哪个目录下？",
+          "options": [
+            { "id": "A", "text": "META-INF/" },
+            { "id": "B", "text": "META-INF/spring/" },
+            { "id": "C", "text": "resources/" },
+            { "id": "D", "text": "spring/" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "约定路径是 META-INF/spring.factories，key 为接口全名，value 为多个实现类全名（逗号分隔）。",
+          "referenceAnchor": "25-spi机制"
+        },
+        {
+          "id": "02-011",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "Spring Boot 2.7+ 中 spring.factories 的角色被什么机制逐步取代？",
+          "options": [
+            { "id": "A", "text": "Java SPI" },
+            { "id": "B", "text": "META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports" },
+            { "id": "C", "text": "META-INF/services" },
+            { "id": "D", "text": "application.yml 配置" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring Boot 2.7+ 引入新的 AutoConfiguration.imports 文件，每行一个全类名。3.0 之后 spring.factories 仍兼容但推荐迁移到新格式。",
           "referenceAnchor": "25-spi机制"
         }
       ]

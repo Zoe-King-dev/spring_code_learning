@@ -19,6 +19,36 @@
           "correctAnswer": ["C"],
           "explanation": "AnnotationAwareAspectJAutoProxyCreator 实现了 BeanPostProcessor，在 postProcessAfterInitialization 中根据匹配到的 Advisor 决定是否创建代理。",
           "referenceAnchor": "91-aop-入口"
+        },
+        {
+          "id": "09-003",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "wrapIfNecessary 中\"找到至少一个适用于该 Bean 的 Advisor\"才会创建代理。这里\"适用\"的判断由谁完成？",
+          "options": [
+            { "id": "A", "text": "由 Advisor 自己投票决定" },
+            { "id": "B", "text": "由 Pointcut 表达式（ClassFilter + MethodMatcher）匹配" },
+            { "id": "C", "text": "由 Bean 的注解决定" },
+            { "id": "D", "text": "由 AOP 配置文件决定" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "每个 Advisor 携带一个 Pointcut，Pointcut 的 ClassFilter 判断类是否匹配、MethodMatcher 判断方法是否匹配；只要存在一个匹配当前 Bean 的 Advisor，就会触发代理。",
+          "referenceAnchor": "91-aop-入口"
+        },
+        {
+          "id": "09-004",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "ProxyFactory 内部的 AopProxyFactory 在选择 JDK / CGLIB 时的判断依据是？",
+          "options": [
+            { "id": "A", "text": "随机选择" },
+            { "id": "B", "text": "optimize、proxyTargetClass、目标类是否实现接口" },
+            { "id": "C", "text": "Spring 版本号" },
+            { "id": "D", "text": "Bean 名称是否含 'Impl' 后缀" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "DefaultAopProxyFactory.createAopProxy 的策略：optimize / proxyTargetClass=true / 目标类未实现接口 → CGLIB；其他 → JDK 动态代理。",
+          "referenceAnchor": "91-aop-入口"
         }
       ]
     },
@@ -38,6 +68,66 @@
           ],
           "correctAnswer": ["B"],
           "explanation": "Spring AOP 的 Advice 执行顺序由 ReflectiveMethodInvocation 维护拦截器链：Around 像洋葱皮，最外层先进入；Before 在 proceed 前执行；After/AfterReturning 在 proceed 之后；Around 最后退出。",
+          "referenceAnchor": "92-advice-执行链"
+        },
+        {
+          "id": "09-005",
+          "type": "multiple",
+          "difficulty": "hard",
+          "question": "ReflectiveMethodInvocation 维护拦截器链时，按以下哪些规则排序？（多选）",
+          "options": [
+            { "id": "A", "text": "实现 Ordered 接口 / @Order 注解" },
+            { "id": "B", "text": "实现 PriorityOrdered 接口的优先级最高" },
+            { "id": "C", "text": "切面类默认顺序" },
+            { "id": "D", "text": "Bean 创建时间戳" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "Spring AOP 拦截器链的排序规则：① PriorityOrdered 优先于 Ordered；② @Order 数值小的优先；③ 未声明顺序的切面按声明类名字典序。Bean 创建时间戳与排序无关。",
+          "referenceAnchor": "92-advice-执行链"
+        },
+        {
+          "id": "09-006",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "下列哪种情况会让 Around Advice 决定不调用 proceed() ？",
+          "options": [
+            { "id": "A", "text": "Around 不能控制流程" },
+            { "id": "B", "text": "Around 显式不调用 proceed()，相当于拦截器短路，可用于权限校验/缓存命中" },
+            { "id": "C", "text": "Around 必须先调用 proceed，否则会编译失败" },
+            { "id": "D", "text": "Around 不需要处理返回值" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Around Advice 是最强大的通知——开发者可选择不调用 joinPoint.proceed() 来短路目标方法，常用于权限校验拒绝、缓存命中直接返回等场景。",
+          "referenceAnchor": "92-advice-执行链"
+        },
+        {
+          "id": "09-007",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "Spring AOP 不支持下列哪种 Joinpoint 类型？",
+          "options": [
+            { "id": "A", "text": "方法调用" },
+            { "id": "B", "text": "方法执行" },
+            { "id": "C", "text": "构造器调用" },
+            { "id": "D", "text": "Spring AOP 仅支持方法级（method execution）" }
+          ],
+          "correctAnswer": ["D"],
+          "explanation": "Spring AOP 是基于代理的 AOP 框架，仅支持方法级别的 joinpoint。构造器、字段、静态初始化等需要 AspectJ 编译期/类加载期织入才能拦截。",
+          "referenceAnchor": "92-advice-执行链"
+        },
+        {
+          "id": "09-008",
+          "type": "multiple",
+          "difficulty": "hard",
+          "question": "下列哪些情况会导致 AOP 代理失效（self-invocation 问题）？（多选）",
+          "options": [
+            { "id": "A", "text": "目标对象内部方法直接调用同类另一个 @Async 方法" },
+            { "id": "B", "text": "目标对象内部 this.xxx() 调用 @Transactional 方法" },
+            { "id": "C", "text": "通过 Spring 容器注入的代理对象调用被 @Async 注解的方法" },
+            { "id": "D", "text": "通过 ApplicationContext.getBean() 获取的实例调用被 @Cacheable 注解的方法" }
+          ],
+          "correctAnswer": ["A", "B"],
+          "explanation": "代理失效的核心是\"调用未走代理对象\"：this.xxx() 走的是原始对象，绕过代理；通过容器注入或 getBean 拿到的是代理对象，能正常触发 Advice。解决办法：注入自身（AopContext.currentProxy()）或拆分 Bean。",
           "referenceAnchor": "92-advice-执行链"
         }
       ]

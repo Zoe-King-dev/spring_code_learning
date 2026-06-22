@@ -19,6 +19,51 @@
           "correctAnswer": ["B"],
           "explanation": "SpringApplication.getOrCreateEnvironment() 根据 WebApplicationType 创建：SERVLET → StandardServletEnvironment、REACTIVE → StandardReactiveWebEnvironment、NONE → StandardEnvironment。",
           "referenceAnchor": "61-prepareenvironment"
+        },
+        {
+          "id": "06-003",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Environment 中用于封装一份外部配置（如 application.yml）的接口是？",
+          "options": [
+            { "id": "A", "text": "PropertySource" },
+            { "id": "B", "text": "BeanDefinition" },
+            { "id": "C", "text": "BeanFactory" },
+            { "id": "D", "text": "ResourceLoader" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "PropertySource 是 Environment 中每一份属性配置的抽象（MapPropertySource、SystemEnvironmentPropertySource 等），按优先级组成 PropertySources 链。",
+          "referenceAnchor": "61-prepareenvironment"
+        },
+        {
+          "id": "06-004",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列哪些是 Spring Boot 默认的外部化配置来源？（多选）",
+          "options": [
+            { "id": "A", "text": "application.properties / application.yml" },
+            { "id": "B", "text": "命令行参数 --server.port=8081" },
+            { "id": "C", "text": "操作系统环境变量" },
+            { "id": "D", "text": "JVM 系统属性 -Dxxx" }
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "Spring Boot 按 Spring Environment PropertySource 链顺序：Devtools global settings > @TestPropertySource > 命令行参数 > ServletConfig / ServletContext > JNDI > JVM 系统属性 > 操作系统环境变量 > application-{profile}.yml > application.yml > @PropertySource 注解。",
+          "referenceAnchor": "61-prepareenvironment"
+        },
+        {
+          "id": "06-005",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "spring.profiles.active 的作用是？",
+          "options": [
+            { "id": "A", "text": "选择哪个数据库驱动" },
+            { "id": "B", "text": "激活指定的 profile（环境），影响 application-{profile}.yml 的加载与 @Profile 标注 Bean 的生效" },
+            { "id": "C", "text": "指定应用启动端口" },
+            { "id": "D", "text": "决定构建工具" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "spring.profiles.active 用于激活一个或多个 profile。激活后 application-{profile}.yml 会与 application.yml 合并；@Profile(\"dev\") 标注的 Bean 仅在 dev profile 下生效。",
+          "referenceAnchor": "61-prepareenvironment"
         }
       ]
     },
@@ -38,6 +83,66 @@
           ],
           "correctAnswer": ["A", "B", "C"],
           "explanation": "prepareContext 负责为 refresh 做准备：设置 Environment、应用 Initializer、加载主 source。refresh 是下一步 refreshContext 才会调用。",
+          "referenceAnchor": "62-preparecontext"
+        },
+        {
+          "id": "06-006",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "ApplicationContextInitializer 的调用时机是？",
+          "options": [
+            { "id": "A", "text": "应用启动完成后" },
+            { "id": "B", "text": "refresh 之前，由 prepareContext 阶段调用" },
+            { "id": "C", "text": "Bean 实例化之前" },
+            { "id": "D", "text": "应用关闭时" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "ApplicationContextInitializer 在 refresh() 之前被调用，用于在 BeanFactory 初始化后、refresh 触发前对上下文做扩展（如注册 PropertySource、设置环境变量等）。",
+          "referenceAnchor": "62-preparecontext"
+        },
+        {
+          "id": "06-007",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "Spring Boot 通过哪个 SPI 机制让 ApplicationContextInitializer 自动生效？",
+          "options": [
+            { "id": "A", "text": "@Component 扫描" },
+            { "id": "B", "text": "spring.factories（key=org.springframework.context.ApplicationContextInitializer）" },
+            { "id": "C", "text": "@PostConstruct" },
+            { "id": "D", "text": "@EventListener" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "SpringApplication 从 spring.factories 加载所有 ApplicationContextInitializer 实现，按 @Order 排序后依次调用。这是 Spring Boot 扩展点注册的统一入口。",
+          "referenceAnchor": "62-preparecontext"
+        },
+        {
+          "id": "06-008",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring Boot 默认的配置文件名是？",
+          "options": [
+            { "id": "A", "text": "config.properties" },
+            { "id": "B", "text": "application.properties 或 application.yml" },
+            { "id": "C", "text": "spring.properties" },
+            { "id": "D", "text": "settings.yml" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "约定文件名：application.properties / application.yml 放在 classpath:/ 或 classpath:/config/ 目录下即可被自动加载。",
+          "referenceAnchor": "62-preparecontext"
+        },
+        {
+          "id": "06-009",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "Spring Boot 中 @PropertySource 注解的作用是？",
+          "options": [
+            { "id": "A", "text": "替代 application.yml" },
+            { "id": "B", "text": "将额外的 .properties / .xml 文件加载为 PropertySource" },
+            { "id": "C", "text": "设置环境变量" },
+            { "id": "D", "text": "管理数据库连接" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "@PropertySource 在 @Configuration 类上声明，把指定路径的属性文件加入 Environment 的 PropertySource 链。注意：@PropertySource 不支持 yml 文件。",
           "referenceAnchor": "62-preparecontext"
         }
       ]

@@ -61,6 +61,49 @@
           ],
           "correctAnswer": ["A"],
           "explanation": "WebFlux 提供两种编程模型：注解式（与 MVC 相似）和函数式（RouterFunction + HandlerFunction）。"
+        },
+        {
+          "id": "p3-005",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "Spring Boot 整合 JDBC 时，下列哪些属于 spring-boot-starter-jdbc 的能力？（多选）",
+          "options": [
+            { "id": "A", "text": "自动装配 DataSource" },
+            { "id": "B", "text": "提供 JdbcTemplate" },
+            { "id": "C", "text": "集成事务管理（@Transactional）" },
+            { "id": "D", "text": "自动生成 Entity 类" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "spring-boot-starter-jdbc 包含 spring-jdbc + spring-tx，提供 DataSource / JdbcTemplate / 事务管理。Entity 类由开发者手写或用 MyBatis/JPA 框架生成。"
+        },
+        {
+          "id": "p3-006",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "Spring MVC 与 WebFlux 在请求处理上的核心差异是？",
+          "options": [
+            { "id": "A", "text": "二者完全等价" },
+            { "id": "B", "text": "WebMvc 是线程池（每请求一线程），WebFlux 是事件循环（少量线程处理高并发）" },
+            { "id": "C", "text": "WebFlux 不支持 WebSocket" },
+            { "id": "D", "text": "WebMvc 不支持注解" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "WebMvc 基于 Servlet 线程模型（每个请求独占一个 worker 线程）；WebFlux 基于 Reactive Streams + 事件循环，少量线程即可处理大量并发连接。两者 API 兼容但运行时不同。"
+        },
+        {
+          "id": "p3-007",
+          "type": "fill-blank",
+          "difficulty": "hard",
+          "question": "补全 DispatcherServlet 处理请求的关键方法链",
+          "lang": "java",
+          "code": "protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {\n    HttpServletRequest processedRequest = request;\n    HandlerExecutionChain mappedHandler = null;\n    boolean multipartRequestParsed = false;\n\n    // 1. 通过 HandlerMapping 找到 handler\n    mappedHandler = getHandler(processedRequest);\n    if (mappedHandler == null) { noHandlerFound(...); return; }\n\n    // 2. 确定 HandlerAdapter\n    HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());\n\n    // 3. preHandle 拦截器\n    if (!mappedHandler.applyPreHandle(processedRequest, response)) return;\n\n    // 4. 实际调用 handler\n    mv = ha.___1___(processedRequest, response, mappedHandler.getHandler());\n\n    // 5. 默认视图名（未显式返回时）\n    applyDefaultViewName(processedRequest, mv);\n    // 6. postHandle 拦截器\n    mappedHandler.applyPostHandle(processedRequest, response, mv);\n    // 7. 处理分发结果（render / @ResponseBody 写入）\n    ___2___(processedRequest, response, mappedHandler, mv);\n}",
+          "blanks": [
+            { "id": "1", "answer": "handle", "hint": "HandlerAdapter 调用 handler 的方法" },
+            { "id": "2", "answer": "processDispatchResult", "hint": "处理 ModelAndView 的方法" }
+          ],
+          "caseSensitive": false,
+          "explanation": "DispatcherServlet.doDispatch 骨架：getHandler → getHandlerAdapter → applyPreHandle → adapter.handle → applyPostHandle → processDispatchResult。",
+          "referenceAnchor": "121-dispatcherservlet"
         }
       ]
     }

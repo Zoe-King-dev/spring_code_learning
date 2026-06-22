@@ -19,6 +19,36 @@
           "correctAnswer": ["A"],
           "explanation": "IOC（控制反转）负责对象的创建与依赖管理，AOP（面向切面编程）负责横切关注点的解耦，两者共同构成 Spring 的核心。",
           "referenceAnchor": "11-spring-framework-的核心特性"
+        },
+        {
+          "id": "01-004",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring Framework 中 IOC 思想最直接的体现是？",
+          "options": [
+            { "id": "A", "text": "由调用方主动 new 对象" },
+            { "id": "B", "text": "对象由 Spring 容器创建并注入到使用者手中" },
+            { "id": "C", "text": "所有 Bean 必须是单例" },
+            { "id": "D", "text": "通过反射调用方法" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "IOC（Inversion of Control）把对象的创建与依赖管理从业务代码中剥离，交给 Spring 容器；调用方只声明需要什么（DI），容器负责装配。这是与主动 new 的根本区别。",
+          "referenceAnchor": "11-spring-framework-的核心特性"
+        },
+        {
+          "id": "01-005",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring AOP 主要解决哪类问题？",
+          "options": [
+            { "id": "A", "text": "数据库连接管理" },
+            { "id": "B", "text": "横切关注点（logging / tx / security）的解耦" },
+            { "id": "C", "text": "REST 接口定义" },
+            { "id": "D", "text": "Bean 作用域" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "AOP 把分散在多个方法中的横切逻辑（日志、事务、安全）抽离成切面，避免代码重复。它是 OOP 的补充而非替代。",
+          "referenceAnchor": "11-spring-framework-的核心特性"
         }
       ]
     },
@@ -39,6 +69,51 @@
           "correctAnswer": ["A", "B", "C"],
           "explanation": "Spring Boot 的四大核心特性是：约定大于配置、自动装配、嵌入式 Web 容器、生产级特性（健康检查/监控）。它对构建工具没有强制要求。",
           "referenceAnchor": "12-spring-boot-的核心特性"
+        },
+        {
+          "id": "01-006",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring Boot 中\"约定大于配置\"最典型的体现是？",
+          "options": [
+            { "id": "A", "text": "必须为每个 Bean 写 XML 配置" },
+            { "id": "B", "text": "组件放在约定路径下即可被自动扫描注册" },
+            { "id": "C", "text": "所有类必须实现某个接口" },
+            { "id": "D", "text": "禁止使用注解" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "约定大于配置：主类放在根包下、Controller 放在 controller 包下、配置文件叫 application.yml 即可生效——无需显式声明扫描路径。",
+          "referenceAnchor": "12-spring-boot-的核心特性"
+        },
+        {
+          "id": "01-007",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring Boot 启动后默认开启的嵌入式 Web 容器是？",
+          "options": [
+            { "id": "A", "text": "Jetty" },
+            { "id": "B", "text": "Undertow" },
+            { "id": "C", "text": "Tomcat" },
+            { "id": "D", "text": "Netty" }
+          ],
+          "correctAnswer": ["C"],
+          "explanation": "spring-boot-starter-web 默认引入 spring-boot-starter-tomcat，Tomcat 是 Spring Boot 的默认嵌入式 Servlet 容器。",
+          "referenceAnchor": "12-spring-boot-的核心特性"
+        },
+        {
+          "id": "01-008",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "Spring Boot 的\"生产级特性\"通常通过哪个模块提供？（多选）",
+          "options": [
+            { "id": "A", "text": "spring-boot-starter-actuator" },
+            { "id": "B", "text": "健康检查 /health" },
+            { "id": "C", "text": "指标收集 /actuator/metrics" },
+            { "id": "D", "text": "编译时注解处理" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "spring-boot-starter-actuator 提供健康检查、指标、审计、HTTP 跟踪等生产级能力；编译时注解处理与生产运维无关。",
+          "referenceAnchor": "12-spring-boot-的核心特性"
         }
       ]
     },
@@ -58,6 +133,51 @@
           ],
           "correctAnswer": ["A"],
           "explanation": "@SpringBootApplication 是组合注解，包含 @SpringBootConfiguration、@EnableAutoConfiguration、@ComponentScan，是 Spring Boot 应用的启动入口标识。",
+          "referenceAnchor": "13-快速创建第一个-spring-boot-项目"
+        },
+        {
+          "id": "01-009",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "@SpringBootApplication 等价于下列哪一组组合注解？",
+          "options": [
+            { "id": "A", "text": "@Component + @Service + @Repository" },
+            { "id": "B", "text": "@SpringBootConfiguration + @EnableAutoConfiguration + @ComponentScan" },
+            { "id": "C", "text": "@Configuration + @Import + @Conditional" },
+            { "id": "D", "text": "@EnableAutoConfiguration + @ComponentScan" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "@SpringBootApplication 内部由这三个元注解组合：@SpringBootConfiguration（配置类）、@EnableAutoConfiguration（开启自动装配）、@ComponentScan（组件扫描）。",
+          "referenceAnchor": "13-快速创建第一个-spring-boot-项目"
+        },
+        {
+          "id": "01-010",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring Boot 应用最常见的启动入口方法是？",
+          "options": [
+            { "id": "A", "text": "public void main(String[] args)" },
+            { "id": "B", "text": "public static void main(String[] args)" },
+            { "id": "C", "text": "public int run(String[] args)" },
+            { "id": "D", "text": "public static ApplicationContext run()" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring Boot 入口方法固定为 public static void main(String[] args)，内部调用 SpringApplication.run() 启动容器。",
+          "referenceAnchor": "13-快速创建第一个-spring-boot-项目"
+        },
+        {
+          "id": "01-011",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring Initializr 的作用是？",
+          "options": [
+            { "id": "A", "text": "运行 Spring Boot 应用" },
+            { "id": "B", "text": "在线 / IDE 插件快速生成 Spring Boot 项目骨架" },
+            { "id": "C", "text": "Spring Boot 的部署工具" },
+            { "id": "D", "text": "Spring 官方论坛" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring Initializr（start.spring.io 或 IDE 内置）让用户通过 Web 表单 / IDE 插件选择依赖与 Java 版本，一键生成 Maven/Gradle 项目骨架。",
           "referenceAnchor": "13-快速创建第一个-spring-boot-项目"
         }
       ]

@@ -19,6 +19,36 @@
           "correctAnswer": ["B"],
           "explanation": "DataSourceAutoConfiguration 优先选择 HikariCP（classpath 中存在 HikariDataSource 时）。Spring Boot 称 HikariCP 为 \"the fastest available connection pool\"。",
           "referenceAnchor": "101-数据源自动装配"
+        },
+        {
+          "id": "10-003",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "DataSourceAutoConfiguration 在 classpath 中没有 HikariCP 时的兜底策略是？",
+          "options": [
+            { "id": "A", "text": "启动失败" },
+            { "id": "B", "text": "尝试 Tomcat pooling DBCP，再回退到 DBCP2，最后使用嵌入式数据库" },
+            { "id": "C", "text": "强制使用 Druid" },
+            { "id": "D", "text": "禁用数据源" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "DataSourceAutoConfiguration 按顺序查找 HikariCP > Tomcat pooling DBCP > DBCP2 > 嵌入式数据库（H2/HSQL/ Derby），全部没有时启动失败。",
+          "referenceAnchor": "101-数据源自动装配"
+        },
+        {
+          "id": "10-004",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "Spring Boot 中通过 spring.datasource.* 可以直接配置下列哪些属性？（多选）",
+          "options": [
+            { "id": "A", "text": "url / username / password" },
+            { "id": "B", "text": "driver-class-name" },
+            { "id": "C", "text": "hikari.maximum-pool-size" },
+            { "id": "D", "text": "mybatis.mapper-locations" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "spring.datasource.* 包含 url/username/password/driver-class-name 等通用属性，加上各连接池特定的 spring.datasource.hikari.*。mybatis.mapper-locations 属于 mybatis-spring-boot-starter 的配置，不在 spring.datasource 下。",
+          "referenceAnchor": "101-数据源自动装配"
         }
       ]
     },
@@ -39,6 +69,71 @@
           "correctAnswer": ["A", "B", "C"],
           "explanation": "JdbcTemplate 的核心价值：资源自动释放、异常统一翻译（SQLErrorCodeSQLExceptionTranslator）、结果集映射（RowMapper / ResultSetExtractor）。schema 生成是 Hibernate/Liquibase 的工作。",
           "referenceAnchor": "102-jdbctemplate"
+        },
+        {
+          "id": "10-005",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "使用 JdbcTemplate.query(\"SELECT * FROM user WHERE id = ?\", rowMapper, id) 时 rowMapper 的作用是？",
+          "options": [
+            { "id": "A", "text": "把 ResultSet 的一行映射为 Java 对象" },
+            { "id": "B", "text": "执行 SQL" },
+            { "id": "C", "text": "管理事务" },
+            { "id": "D", "text": "处理异常" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "RowMapper.mapRow(ResultSet rs, int rowNum) 在每一行 ResultSet 上调用，把当前行转换为 Java 对象。JdbcTemplate 内部遍历 ResultSet 并把结果聚合成 List。",
+          "referenceAnchor": "102-jdbctemplate"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "103-事务管理",
+      "questions": [
+        {
+          "id": "10-006",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "@Transactional 注解的核心实现机制是？",
+          "options": [
+            { "id": "A", "text": "编译期注入" },
+            { "id": "B", "text": "AOP 拦截 + PlatformTransactionManager（TransactionInterceptor 是核心拦截器）" },
+            { "id": "C", "text": "反射调用" },
+            { "id": "D", "text": "JDBC 驱动内置支持" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "@Transactional 由 Spring AOP 实现：BeanPostProcessor 创建代理后，方法调用被 TransactionInterceptor 拦截，在调用前后通过 PlatformTransactionManager 控制事务边界。",
+          "referenceAnchor": "103-事务管理"
+        },
+        {
+          "id": "10-007",
+          "type": "multiple",
+          "difficulty": "hard",
+          "question": "Spring 的事务传播行为（Propagation）下列哪些是合法取值？（多选）",
+          "options": [
+            { "id": "A", "text": "REQUIRED（默认值）" },
+            { "id": "B", "text": "REQUIRES_NEW" },
+            { "id": "C", "text": "NESTED" },
+            { "id": "D", "text": "ROLLBACK" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "Spring 提供 7 种传播行为：REQUIRED / SUPPORTS / MANDATORY / REQUIRES_NEW / NOT_SUPPORTED / NEVER / NESTED。ROLLBACK 不是传播行为，是回滚规则。",
+          "referenceAnchor": "103-事务管理"
+        },
+        {
+          "id": "10-008",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring 事务的默认回滚规则是？",
+          "options": [
+            { "id": "A", "text": "对所有 Exception 都回滚" },
+            { "id": "B", "text": "仅对 RuntimeException / Error 回滚，checked exception 不回滚" },
+            { "id": "C", "text": "仅对 Error 回滚" },
+            { "id": "D", "text": "从不自动回滚" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring 默认 rollbackFor = RuntimeException 与 Error。checked exception（如 IOException）被认为可能是业务处理的一部分，不会自动回滚。可通过 @Transactional(rollbackFor=Exception.class) 显式覆盖。",
+          "referenceAnchor": "103-事务管理"
         }
       ]
     }

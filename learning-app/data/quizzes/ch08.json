@@ -19,6 +19,36 @@
           "correctAnswer": ["C"],
           "explanation": "spring-boot-starter-web 默认引入 spring-boot-starter-tomcat。可通过 exclude tomcat 并引入 jetty/undertow starter 切换。Netty 是 WebFlux 默认。",
           "referenceAnchor": "81-嵌入式容器概述"
+        },
+        {
+          "id": "08-003",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "Spring Boot 支持的嵌入式 Web 容器包括？（多选）",
+          "options": [
+            { "id": "A", "text": "Tomcat" },
+            { "id": "B", "text": "Jetty" },
+            { "id": "C", "text": "Undertow" },
+            { "id": "D", "text": "Netty（WebFlux 专用）" }
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "Spring Boot 通过 spring-boot-starter-{tomcat/jetty/undertow} 切换 Servlet 容器；WebFlux 场景使用 spring-boot-starter-reactor-netty。",
+          "referenceAnchor": "81-嵌入式容器概述"
+        },
+        {
+          "id": "08-004",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring Boot 默认的 HTTP 端口是？",
+          "options": [
+            { "id": "A", "text": "80" },
+            { "id": "B", "text": "8080" },
+            { "id": "C", "text": "8443" },
+            { "id": "D", "text": "8000" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "默认 server.port=8080，可通过 application.yml 或 --server.port=8081 覆盖。",
+          "referenceAnchor": "81-嵌入式容器概述"
         }
       ]
     },
@@ -38,6 +68,66 @@
           ],
           "correctAnswer": ["B"],
           "explanation": "ServletWebServerApplicationContext 覆写 onRefresh()，在其中调用 createWebServer() 创建并启动 Tomcat。",
+          "referenceAnchor": "82-嵌入式容器启动"
+        },
+        {
+          "id": "08-005",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "WebServerFactory 的作用是？",
+          "options": [
+            { "id": "A", "text": "定义 HTTP 路由" },
+            { "id": "B", "text": "作为嵌入式容器的工厂，由 Spring Boot 通过 @ConditionalOnClass 自动选择实现" },
+            { "id": "C", "text": "管理数据库连接" },
+            { "id": "D", "text": "实现 AOP 代理" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "ServletWebServerFactory 是嵌入式容器的工厂接口。Spring Boot 自动装配根据 classpath 中存在的容器类（Tomcat/Jetty/Undertow）实例化对应的工厂。",
+          "referenceAnchor": "82-嵌入式容器启动"
+        },
+        {
+          "id": "08-006",
+          "type": "multiple",
+          "difficulty": "hard",
+          "question": "嵌入式 Tomcat 启动过程中会执行下列哪些关键步骤？（多选）",
+          "options": [
+            { "id": "A", "text": "创建 Tomcat 实例并配置 Connector" },
+            { "id": "B", "text": "创建 TomcatEmbeddedContext 并注册 DispatcherServlet" },
+            { "id": "C", "text": "启动 Connector 监听端口" },
+            { "id": "D", "text": "启动 MySQL 连接池" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "Tomcat 启动流程：创建 Tomcat → 配置 Connector（NIO/NIO2）→ 创建 TomcatEmbeddedContext → 注册 ServletContextInitializer（含 DispatcherServlet）→ tomcat.start() → Connector 绑定端口。MySQL 是数据源，与 Web 容器无关。",
+          "referenceAnchor": "82-嵌入式容器启动"
+        },
+        {
+          "id": "08-007",
+          "type": "fill-blank",
+          "difficulty": "hard",
+          "question": "补全 ServletWebServerApplicationContext 启动嵌入式 Tomcat 的关键调用",
+          "lang": "java",
+          "code": "@Override\nprotected void onRefresh() {\n    super.onRefresh();\n    try {\n        ___1___();              // 创建并启动 WebServer\n    } catch (Throwable ex) {\n        throw new ApplicationContextException(\"Unable to start web server\", ex);\n    }\n}\n\nprivate void createWebServer() {\n    WebServer webServer = this.webServer;\n    ServletContext servletContext = getServletContext();\n    if (webServer == null && servletContext == null) {\n        ServletWebServerFactory factory = getWebServerFactory();\n        this.webServer = factory.___2___(getSelfInitializer());\n    }\n    initPropertySources();\n}",
+          "blanks": [
+            { "id": "1", "answer": "createWebServer", "hint": "创建 WebServer 的方法" },
+            { "id": "2", "answer": "getWebServer", "hint": "通过工厂获取 WebServer 实例" }
+          ],
+          "caseSensitive": false,
+          "explanation": "onRefresh 调用 createWebServer 内部通过 ServletWebServerFactory.getWebServer() 拿到 Tomcat/Jetty/Undertow 的具体实例并启动。",
+          "referenceAnchor": "82-嵌入式容器启动"
+        },
+        {
+          "id": "08-008",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "嵌入式 Tomcat 的 NIO Connector 默认监听的端口来自哪个配置项？",
+          "options": [
+            { "id": "A", "text": "tomcat.port" },
+            { "id": "B", "text": "server.port" },
+            { "id": "C", "text": "http.port" },
+            { "id": "D", "text": "spring.tomcat.port" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "server.port 是 Spring Boot 的统一配置项，由 WebServerFactoryCustomizer 转换为 Tomcat 的 Connector port。",
           "referenceAnchor": "82-嵌入式容器启动"
         }
       ]

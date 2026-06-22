@@ -19,6 +19,36 @@
           "correctAnswer": ["B"],
           "explanation": "run() 方法返回 ConfigurableApplicationContext，它是 ApplicationContext 的子接口，提供更多配置能力（如 refresh、close）。",
           "referenceAnchor": "41-springapplication-概述"
+        },
+        {
+          "id": "04-005",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "SpringApplication.run() 中最先发布的事件是？",
+          "options": [
+            { "id": "A", "text": "ApplicationStartedEvent" },
+            { "id": "B", "text": "ApplicationEnvironmentPreparedEvent" },
+            { "id": "C", "text": "ApplicationStartingEvent" },
+            { "id": "D", "text": "ContextRefreshedEvent" }
+          ],
+          "correctAnswer": ["C"],
+          "explanation": "SpringApplicationRunListener.starting() 在 run() 第一步就触发，对应 ApplicationStartingEvent，此时 Environment 尚未创建。",
+          "referenceAnchor": "41-springapplication-概述"
+        },
+        {
+          "id": "04-006",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "SpringApplication.run() 中 WebApplicationType 的作用是？",
+          "options": [
+            { "id": "A", "text": "决定使用哪个日志框架" },
+            { "id": "B", "text": "决定创建哪种 ApplicationContext（SERVLET / REACTIVE / NONE）" },
+            { "id": "C", "text": "决定 JVM 启动参数" },
+            { "id": "D", "text": "决定 bean 命名规则" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "WebApplicationType 根据 classpath 是否存在 Servlet/Reactive 类推断应用类型，进而在 createApplicationContext 时实例化 AnnotationConfigServletWebServerApplicationContext 或 Reactive 版本。",
+          "referenceAnchor": "41-springapplication-概述"
         }
       ]
     },
@@ -56,6 +86,36 @@
           "referenceAnchor": "42-run-方法的执行流程"
         },
         {
+          "id": "04-007",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "ApplicationRunner 与 CommandLineRunner 的区别是？",
+          "options": [
+            { "id": "A", "text": "前者先于后者执行" },
+            { "id": "B", "text": "前者参数为 ApplicationArguments（解析后的 args），后者参数为 String[]（原始 args）" },
+            { "id": "C", "text": "前者只支持 Servlet 应用" },
+            { "id": "D", "text": "两者完全等价" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "两者都在 callRunners 阶段被调用、按 @Order 排序。ApplicationRunner 提供封装好的 ApplicationArguments（可解析 --key=value 形式选项），CommandLineRunner 直接拿原始 String[]。",
+          "referenceAnchor": "42-run-方法的执行流程"
+        },
+        {
+          "id": "04-008",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "ApplicationReadyEvent 是在以下哪个阶段之后发布的？",
+          "options": [
+            { "id": "A", "text": "refreshContext 完成" },
+            { "id": "B", "text": "callRunners 完成" },
+            { "id": "C", "text": "ApplicationRunner 执行前" },
+            { "id": "D", "text": "Environment 准备完成" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "事件发布顺序：starting → environmentPrepared → contextPrepared → contextLoaded → contextRefreshed → started（refresh 完）→ running（callRunners 完）。ApplicationReadyEvent 对应 running 阶段。",
+          "referenceAnchor": "42-run-方法的执行流程"
+        },
+        {
           "id": "04-fill-001",
           "type": "fill-blank",
           "difficulty": "hard",
@@ -69,6 +129,21 @@
           ],
           "caseSensitive": false,
           "explanation": "run() 的骨架可简化为：prepareEnvironment → createApplicationContext → prepareContext → refreshContext → callRunners。每一步在源码中都是同名方法。",
+          "referenceAnchor": "42-run-方法的执行流程"
+        },
+        {
+          "id": "04-009",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "SpringApplication.run() 静态方法与实例方法的关系是？",
+          "options": [
+            { "id": "A", "text": "完全独立" },
+            { "id": "B", "text": "静态方法内部创建 SpringApplication 实例并调用其 run() 实例方法" },
+            { "id": "C", "text": "实例方法是私有方法" },
+            { "id": "D", "text": "静态方法直接调用 refresh()" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "SpringApplication.run(Class, args) 静态方法内 new SpringApplication(primarySource).run(args)，把 main class 与 args 交给实例方法处理。",
           "referenceAnchor": "42-run-方法的执行流程"
         }
       ]

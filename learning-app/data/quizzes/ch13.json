@@ -19,6 +19,36 @@
           "correctAnswer": ["C"],
           "explanation": "WebFlux 默认使用 reactor-netty。也支持运行在 Servlet 3.1+ 容器、Undertow、Jetty 上，但事件驱动场景下 Netty 性能与一致性最佳。",
           "referenceAnchor": "131-reactive-编程模型"
+        },
+        {
+          "id": "13-003",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "WebFlux 相比 WebMvc 在并发模型上的核心优势是？",
+          "options": [
+            { "id": "A", "text": "每个请求独占一个线程" },
+            { "id": "B", "text": "事件循环 + 少量线程处理大量并发连接，适合 IO 密集型" },
+            { "id": "C", "text": "使用更多线程" },
+            { "id": "D", "text": "WebFlux 不支持数据库" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "WebFlux 基于响应式流 + 事件循环，少量线程（如 Netty 的 EventLoop）即可处理大量并发连接；适合 IO 密集型场景。CPU 密集型反而不如 WebMvc。",
+          "referenceAnchor": "131-reactive-编程模型"
+        },
+        {
+          "id": "13-004",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列哪些是 Reactive Streams 的核心接口？（多选）",
+          "options": [
+            { "id": "A", "text": "Publisher" },
+            { "id": "B", "text": "Subscriber" },
+            { "id": "C", "text": "Subscription" },
+            { "id": "D", "text": "Transformer" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "Reactive Streams 规范定义 4 个核心接口：Publisher、Subscriber、Subscription、Processor。Transformer 不是核心接口。",
+          "referenceAnchor": "131-reactive-编程模型"
         }
       ]
     },
@@ -39,6 +69,66 @@
           "correctAnswer": ["A", "B", "C"],
           "explanation": "Mono/Flux 都是基于 Reactive Streams Publisher 的冷流。可通过 Mono.from(flux)、flux.next()、flux.collectList() 等方法互转。",
           "referenceAnchor": "132-mono-flux"
+        },
+        {
+          "id": "13-005",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "Reactive Streams 的\"背压（backpressure）\"机制是？",
+          "options": [
+            { "id": "A", "text": "Publisher 不受控制地发射数据" },
+            { "id": "B", "text": "Subscriber 通过 Subscription.request(n) 主动声明最多能消费多少元素" },
+            { "id": "C", "text": "Subscriber 拒绝所有数据" },
+            { "id": "D", "text": "由 JVM 调度器自动平衡" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "背压是 Subscriber 主动通过 request(n) 控制 Publisher 发射节奏的机制，避免下游被压垮。这是 Reactiv Streams 相对传统 Observer 模式的关键改进。",
+          "referenceAnchor": "132-mono-flux"
+        },
+        {
+          "id": "13-006",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "WebFlux 中声明响应式 REST 接口的注解是？",
+          "options": [
+            { "id": "A", "text": "@RestController（与 WebMvc 一样）" },
+            { "id": "B", "text": "@ReactiveController" },
+            { "id": "C", "text": "@AsyncController" },
+            { "id": "D", "text": "@StreamController" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "WebFlux 沿用 @RestController 注解，方法签名返回 Mono/Flux 即可，框架识别后走响应式处理路径。",
+          "referenceAnchor": "132-mono-flux"
+        },
+        {
+          "id": "13-007",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "WebFlux 函数式路由（RouterFunction）的核心优势是？",
+          "options": [
+            { "id": "A", "text": "性能更高" },
+            { "id": "B", "text": "路由与处理逻辑解耦，可灵活组合、复用、测试" },
+            { "id": "C", "text": "可以替代 DispatcherHandler" },
+            { "id": "D", "text": "支持 Servlet 容器" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "RouterFunction 把\"哪个 URL 走哪个 Handler\"的映射抽成独立的 Bean，便于组合（and / or / nest）、单测、动态装配。HandlerFunction 是处理逻辑本身。",
+          "referenceAnchor": "132-mono-flux"
+        },
+        {
+          "id": "13-008",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "WebFlux 中常见的不适用场景是？（多选）",
+          "options": [
+            { "id": "A", "text": "计算密集型任务（CPU 密集）" },
+            { "id": "B", "text": "需要大量阻塞 JDBC 调用的应用" },
+            { "id": "C", "text": "需要 Spring MVC 生态（如 Spring Security 旧版、传统 Servlet 过滤器）" },
+            { "id": "D", "text": "任何 IO 密集型微服务" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "WebFlux 在 CPU 密集型场景下反而没有优势（事件循环被阻塞）；传统阻塞式 JDBC（除非用 r2dbc）会卡住事件循环线程；部分 Spring 生态组件（如旧版 Spring Security）尚未完全支持 WebFlux。IO 密集型 + 非阻塞式下游（R2DBC / WebClient）才是 WebFlux 的甜蜜点。",
+          "referenceAnchor": "131-reactive-编程模型"
         }
       ]
     }

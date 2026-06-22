@@ -19,6 +19,36 @@
           "correctAnswer": ["B"],
           "explanation": "@MapperScan 触发 MapperScannerRegistrar（ImportBeanDefinitionRegistrar），扫描后为每个 Mapper 接口注册 MapperFactoryBean，由它通过 SqlSession.getMapper() 生成动态代理。",
           "referenceAnchor": "111-mybatis-starter"
+        },
+        {
+          "id": "11-003",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "在 Spring Boot 中启用 MyBatis 只需要引入哪个 starter？",
+          "options": [
+            { "id": "A", "text": "spring-boot-starter-jdbc" },
+            { "id": "B", "text": "mybatis-spring-boot-starter" },
+            { "id": "C", "text": "spring-boot-starter-mybatis" },
+            { "id": "D", "text": "mybatis-spring" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "官方 starter 是 mybatis-spring-boot-starter，由 mybatis 团队维护，引入后自动配置 SqlSessionFactory 与 MapperScanner。",
+          "referenceAnchor": "111-mybatis-starter"
+        },
+        {
+          "id": "11-004",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "@Mapper 与 @MapperScan 的区别是？",
+          "options": [
+            { "id": "A", "text": "二者完全等价" },
+            { "id": "B", "text": "@Mapper 需标注在每个 Mapper 接口上；@MapperScan 标注在启动类上，指定包路径统一扫描" },
+            { "id": "C", "text": "@MapperScan 仅用于 Service 层" },
+            { "id": "D", "text": "@Mapper 不需要 Spring 支持" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "@Mapper 由 mybatis 提供，会在编译期生成对应接口的实现类（@Component 风格）；@MapperScan 是 Spring 集成方式，运行时扫描注册，标注一次即可。",
+          "referenceAnchor": "111-mybatis-starter"
         }
       ]
     },
@@ -39,6 +69,71 @@
           "correctAnswer": ["B"],
           "explanation": "Spring 集成下注入的是 SqlSessionTemplate，它是线程安全的代理；通过 SqlSessionInterceptor 在同一事务内复用同一个底层 SqlSession，自动处理提交/回滚。",
           "referenceAnchor": "112-sqlsession"
+        },
+        {
+          "id": "11-005",
+          "type": "multiple",
+          "difficulty": "hard",
+          "question": "SqlSessionFactory 的核心初始化工作包括？（多选）",
+          "options": [
+            { "id": "A", "text": "解析 mybatis-config.xml（settings / typeAliases / plugins）" },
+            { "id": "B", "text": "加载所有 XML Mapper 文件" },
+            { "id": "C", "text": "为每个 Mapper 接口生成代理工厂" },
+            { "id": "D", "text": "连接数据库" }
+          ],
+          "correctAnswer": ["A", "B"],
+          "explanation": "SqlSessionFactoryBean.buildSqlSessionFactory() 主要做：解析全局配置、扫描 XML/注解 Mapper 解析 SQL、构造 Configuration。连接数据库是 getConnection() 时才发生。",
+          "referenceAnchor": "112-sqlsession"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "113-mybatis-executor",
+      "questions": [
+        {
+          "id": "11-006",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "MyBatis 的一级缓存（Session 级别缓存）默认作用域是？",
+          "options": [
+            { "id": "A", "text": "整个应用" },
+            { "id": "B", "text": "同一个 SqlSession 内" },
+            { "id": "C", "text": "同一个 Mapper 接口" },
+            { "id": "D", "text": "每条 SQL 语句" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "MyBatis 一级缓存默认开启，作用域是同一个 SqlSession。Spring 集成下每次 mapper 调用共享 SqlSessionTemplate，同一事务内可命中一级缓存。",
+          "referenceAnchor": "113-mybatis-executor"
+        },
+        {
+          "id": "11-007",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "MyBatis 注解方式下，编写动态 SQL 通常使用哪个注解？",
+          "options": [
+            { "id": "A", "text": "@Select" },
+            { "id": "B", "text": "@Update" },
+            { "id": "C", "text": "@SelectProvider" },
+            { "id": "D", "text": "@SQL" }
+          ],
+          "correctAnswer": ["C"],
+          "explanation": "@SelectProvider/@UpdateProvider/@InsertProvider/@DeleteProvider 让 SQL 在 Java 方法中拼接，避开 @Select 注解无法写动态 SQL 的限制。复杂场景仍推荐 XML Mapper。",
+          "referenceAnchor": "113-mybatis-executor"
+        },
+        {
+          "id": "11-008",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "MyBatis 开启二级缓存（namespace 级别）的开关是？",
+          "options": [
+            { "id": "A", "text": "在 mybatis-config.xml 中设置 <setting name=\"cacheEnabled\" value=\"true\"/>" },
+            { "id": "B", "text": "在对应 Mapper XML 中添加 <cache/> 节点" },
+            { "id": "C", "text": "在 Java 接口上标注 @CacheNamespace" },
+            { "id": "D", "text": "B 和 C 都对" }
+          ],
+          "correctAnswer": ["D"],
+          "explanation": "MyBatis 二级缓存按 namespace 划分。XML 方式：在 <mapper> 下加 <cache/> 节点；注解方式：在接口上加 @CacheNamespace。两个等价。",
+          "referenceAnchor": "113-mybatis-executor"
         }
       ]
     }
