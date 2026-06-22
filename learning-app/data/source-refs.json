@@ -1,0 +1,64 @@
+{
+  "githubBase": "https://github.com/spring-projects/spring-boot/blob/v2.7.18",
+  "frameworkBase": "https://github.com/spring-projects/spring-framework/blob/v5.3.39",
+  "refs": {
+    "02": [
+      { "label": "@EnableAutoConfiguration", "path": "spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/EnableAutoConfiguration.java", "repo": "boot" },
+      { "label": "AutoConfigurationImportSelector", "path": "spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/AutoConfigurationImportSelector.java", "repo": "boot" },
+      { "label": "spring.factories", "path": "spring-boot-project/spring-boot-autoconfigure/src/main/resources/META-INF/spring.factories", "repo": "boot" },
+      { "label": "SpringFactoriesLoader", "path": "spring-core/src/main/java/org/springframework/core/io/support/SpringFactoriesLoader.java", "repo": "framework" }
+    ],
+    "03": [
+      { "label": "BeanFactory", "path": "spring-beans/src/main/java/org/springframework/beans/factory/BeanFactory.java", "repo": "framework" },
+      { "label": "ApplicationContext", "path": "spring-context/src/main/java/org/springframework/context/ApplicationContext.java", "repo": "framework" },
+      { "label": "DefaultListableBeanFactory", "path": "spring-beans/src/main/java/org/springframework/beans/factory/support/DefaultListableBeanFactory.java", "repo": "framework" },
+      { "label": "AbstractAutowireCapableBeanFactory#doCreateBean", "path": "spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.java", "repo": "framework" }
+    ],
+    "04": [
+      { "label": "SpringApplication", "path": "spring-boot-project/spring-boot/src/main/java/org/springframework/boot/SpringApplication.java", "repo": "boot" },
+      { "label": "SpringApplicationRunListener", "path": "spring-boot-project/spring-boot/src/main/java/org/springframework/boot/SpringApplicationRunListener.java", "repo": "boot" },
+      { "label": "ApplicationRunner", "path": "spring-boot-project/spring-boot/src/main/java/org/springframework/boot/ApplicationRunner.java", "repo": "boot" }
+    ],
+    "05": [
+      { "label": "@EnableAspectJAutoProxy", "path": "spring-context/src/main/java/org/springframework/context/annotation/EnableAspectJAutoProxy.java", "repo": "framework" },
+      { "label": "ProxyFactory", "path": "spring-aop/src/main/java/org/springframework/aop/framework/ProxyFactory.java", "repo": "framework" }
+    ],
+    "06": [
+      { "label": "ConfigurableEnvironment", "path": "spring-core/src/main/java/org/springframework/core/env/ConfigurableEnvironment.java", "repo": "framework" },
+      { "label": "StandardServletEnvironment", "path": "spring-web/src/main/java/org/springframework/web/context/support/StandardServletEnvironment.java", "repo": "framework" }
+    ],
+    "07": [
+      { "label": "AbstractApplicationContext#refresh", "path": "spring-context/src/main/java/org/springframework/context/support/AbstractApplicationContext.java", "repo": "framework" },
+      { "label": "ConfigurationClassPostProcessor", "path": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java", "repo": "framework" },
+      { "label": "PostProcessorRegistrationDelegate", "path": "spring-context/src/main/java/org/springframework/context/support/PostProcessorRegistrationDelegate.java", "repo": "framework" }
+    ],
+    "08": [
+      { "label": "ServletWebServerApplicationContext", "path": "spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/servlet/context/ServletWebServerApplicationContext.java", "repo": "boot" },
+      { "label": "TomcatServletWebServerFactory", "path": "spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/embedded/tomcat/TomcatServletWebServerFactory.java", "repo": "boot" }
+    ],
+    "09": [
+      { "label": "AnnotationAwareAspectJAutoProxyCreator", "path": "spring-aop/src/main/java/org/springframework/aop/aspectj/annotation/AnnotationAwareAspectJAutoProxyCreator.java", "repo": "framework" },
+      { "label": "AbstractAutoProxyCreator#postProcessAfterInitialization", "path": "spring-aop/src/main/java/org/springframework/aop/framework/autoproxy/AbstractAutoProxyCreator.java", "repo": "framework" }
+    ],
+    "10": [
+      { "label": "DataSourceAutoConfiguration", "path": "spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/jdbc/DataSourceAutoConfiguration.java", "repo": "boot" },
+      { "label": "JdbcTemplate", "path": "spring-jdbc/src/main/java/org/springframework/jdbc/core/JdbcTemplate.java", "repo": "framework" }
+    ],
+    "11": [
+      { "label": "MybatisAutoConfiguration（mybatis-spring-boot-starter）", "path": "https://github.com/mybatis/spring-boot-starter/blob/master/mybatis-spring-boot-autoconfigure/src/main/java/org/mybatis/spring/boot/autoconfigure/MybatisAutoConfiguration.java", "repo": "external" },
+      { "label": "MapperFactoryBean", "path": "https://github.com/mybatis/spring/blob/master/src/main/java/org/mybatis/spring/mapper/MapperFactoryBean.java", "repo": "external" }
+    ],
+    "12": [
+      { "label": "WebMvcAutoConfiguration", "path": "spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration.java", "repo": "boot" },
+      { "label": "DispatcherServlet", "path": "spring-webmvc/src/main/java/org/springframework/web/servlet/DispatcherServlet.java", "repo": "framework" }
+    ],
+    "13": [
+      { "label": "WebFluxAutoConfiguration", "path": "spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/web/reactive/WebFluxAutoConfiguration.java", "repo": "boot" },
+      { "label": "DispatcherHandler", "path": "spring-webflux/src/main/java/org/springframework/web/reactive/DispatcherHandler.java", "repo": "framework" }
+    ],
+    "14": [
+      { "label": "spring-boot-loader (LaunchedURLClassLoader)", "path": "spring-boot-project/spring-boot-tools/spring-boot-loader/src/main/java/org/springframework/boot/loader/LaunchedURLClassLoader.java", "repo": "boot" },
+      { "label": "GracefulShutdown", "path": "spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/embedded/tomcat/GracefulShutdown.java", "repo": "boot" }
+    ]
+  }
+}

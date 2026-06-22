@@ -1,0 +1,17 @@
+flowchart TD
+    Start([BeanDefinition 注册]) --> Inst[实例化<br/>createBeanInstance]
+    Inst --> Pop[属性填充<br/>populateBean]
+    Pop --> Aware[Aware 接口回调<br/>BeanNameAware / BeanFactoryAware / ApplicationContextAware]
+    Aware --> BPP1[BeanPostProcessor<br/>postProcessBeforeInitialization]
+    BPP1 --> Init[初始化方法<br/>@PostConstruct → InitializingBean → init-method]
+    Init --> BPP2[BeanPostProcessor<br/>postProcessAfterInitialization<br/>AOP 代理在此织入]
+    BPP2 --> Ready([Bean 就绪可被使用])
+    Ready --> Destroy[销毁<br/>@PreDestroy → DisposableBean → destroy-method]
+    Destroy --> End([Bean 销毁])
+
+    classDef hook fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef phase fill:#e3f2fd,stroke:#1565c0
+    classDef terminal fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    class Inst,Pop,Init,Destroy phase
+    class Aware,BPP1,BPP2 hook
+    class Start,Ready,End terminal

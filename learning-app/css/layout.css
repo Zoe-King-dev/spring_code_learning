@@ -1,0 +1,209 @@
+/* layout.css — 整体布局 */
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ---- 顶栏 ---- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 var(--space-lg);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.topbar-logo {
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  color: var(--color-primary);
+  white-space: nowrap;
+  letter-spacing: .02em;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---- 路线图 ---- */
+.roadmap {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  overflow: hidden;
+  transition: max-height .35s ease, padding .35s ease;
+  max-height: 600px;
+}
+
+.roadmap.collapsed {
+  max-height: 0;
+  border-bottom-color: transparent;
+}
+
+.roadmap-inner {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  overflow-x: auto;
+}
+
+.roadmap-toggle {
+  display: block;
+  width: 100%;
+  padding: 6px;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: color .15s;
+}
+
+.roadmap-toggle:hover {
+  color: var(--color-primary);
+}
+
+.roadmap.collapsed .roadmap-toggle {
+  border-top-color: transparent;
+}
+
+/* ---- 阅读区 ---- */
+.reader {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 220px minmax(0, var(--content-max-w)) 1fr;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ---- 章内 TOC 侧栏 ---- */
+.toc-sidebar {
+  position: sticky;
+  top: 48px;
+  height: calc(100vh - 48px);
+  overflow-y: auto;
+  padding: var(--space-lg) var(--space-md) var(--space-lg) var(--space-lg);
+  border-right: 1px solid var(--color-border);
+}
+
+.toc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.toc-title {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.toc-progress {
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+}
+
+.toc-nav {
+  font-size: var(--fs-sm);
+}
+
+.toc-nav a {
+  display: block;
+  padding: 4px 0;
+  color: var(--color-text-muted);
+  border-left: 2px solid transparent;
+  padding-left: var(--space-sm);
+  transition: color .15s, border-color .15s;
+  text-decoration: none;
+}
+
+.toc-nav a:hover {
+  color: var(--color-text);
+}
+
+.toc-nav a.active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  font-weight: 500;
+}
+
+.toc-nav a.toc-l3 {
+  padding-left: calc(var(--space-sm) + var(--space-md));
+  font-size: var(--fs-xs);
+}
+
+/* ---- 主内容 ---- */
+.main-content {
+  grid-column: 2;
+  padding: var(--space-lg) var(--space-xl) var(--space-2xl);
+  min-width: 0;
+}
+
+/* ---- 底部导航 ---- */
+.bottom-nav {
+  grid-column: 2;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 var(--space-xl) var(--space-xl);
+  max-width: var(--content-max-w);
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ---- 响应式 ---- */
+@media (max-width: 960px) {
+  .reader {
+    grid-template-columns: 1fr;
+  }
+
+  .toc-sidebar {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 48px;
+    height: calc(100vh - 48px);
+    width: 250px;
+    background: var(--color-surface);
+    z-index: 90;
+    box-shadow: var(--shadow-md);
+    padding: var(--space-md);
+  }
+
+  .toc-sidebar.open {
+    display: block;
+  }
+
+  .main-content {
+    grid-column: 1;
+    padding: var(--space-md);
+  }
+
+  .roadmap-inner {
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+  }
+
+  .topbar-actions .search-input {
+    width: 140px;
+  }
+}
+
+/* ---- 右侧间距 ---- */
+@media (min-width: 961px) {
+  .reader::after {
+    content: '';
+    grid-column: 3;
+  }
+}

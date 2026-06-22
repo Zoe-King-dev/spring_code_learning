@@ -1,0 +1,61 @@
+{
+  "chapterId": "05",
+  "title": "第5章 Spring Boot 的 AOP 支持",
+  "sections": [
+    {
+      "sectionAnchor": "51-aop-概述",
+      "questions": [
+        {
+          "id": "05-001",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "AOP 中的 \"Joinpoint（连接点）\" 通常指什么？",
+          "options": [
+            { "id": "A", "text": "切面被织入的具体程序执行点（如方法调用）" },
+            { "id": "B", "text": "通知的具体实现类" },
+            { "id": "C", "text": "切点表达式匹配规则" },
+            { "id": "D", "text": "AOP 代理对象本身" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "Joinpoint 是程序执行过程中可被拦截的点，Spring AOP 仅支持方法级的连接点（即方法调用）。Pointcut 是连接点的筛选规则，Advice 是织入的逻辑，Aspect 是 Pointcut + Advice 的组合。",
+          "referenceAnchor": "51-aop-概述"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "52-aop-代理机制",
+      "questions": [
+        {
+          "id": "05-002",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring AOP 默认在目标类没有实现接口时使用哪种代理？",
+          "options": [
+            { "id": "A", "text": "JDK 动态代理" },
+            { "id": "B", "text": "CGLIB 子类代理" },
+            { "id": "C", "text": "静态代理" },
+            { "id": "D", "text": "Javassist 字节码增强" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring AOP 的默认策略：目标类实现接口时使用 JDK 动态代理；否则使用 CGLIB 生成子类代理。可通过 proxyTargetClass=true 强制全部使用 CGLIB。",
+          "referenceAnchor": "52-aop-代理机制"
+        },
+        {
+          "id": "05-003",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列哪些是 Spring AOP 支持的 Advice 类型？（多选）",
+          "options": [
+            { "id": "A", "text": "@Before" },
+            { "id": "B", "text": "@After" },
+            { "id": "C", "text": "@Around" },
+            { "id": "D", "text": "@AfterReturning / @AfterThrowing" }
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "Spring AOP 支持五种 Advice：@Before、@After、@AfterReturning、@AfterThrowing、@Around。其中 @Around 最强大，可以决定是否执行目标方法并修改返回值。",
+          "referenceAnchor": "52-aop-代理机制"
+        }
+      ]
+    }
+  ]
+}

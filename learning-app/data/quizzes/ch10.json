@@ -1,0 +1,46 @@
+{
+  "chapterId": "10",
+  "title": "第10章 Spring Boot 整合 JDBC",
+  "sections": [
+    {
+      "sectionAnchor": "101-数据源自动装配",
+      "questions": [
+        {
+          "id": "10-001",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring Boot 2.x 默认的数据源连接池是？",
+          "options": [
+            { "id": "A", "text": "Druid" },
+            { "id": "B", "text": "HikariCP" },
+            { "id": "C", "text": "DBCP2" },
+            { "id": "D", "text": "C3P0" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "DataSourceAutoConfiguration 优先选择 HikariCP（classpath 中存在 HikariDataSource 时）。Spring Boot 称 HikariCP 为 \"the fastest available connection pool\"。",
+          "referenceAnchor": "101-数据源自动装配"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "102-jdbctemplate",
+      "questions": [
+        {
+          "id": "10-002",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "JdbcTemplate 通过哪些核心机制简化 JDBC 编程？（多选）",
+          "options": [
+            { "id": "A", "text": "自动管理 Connection / Statement / ResultSet 的关闭" },
+            { "id": "B", "text": "把 SQLException 转换为 Spring 的 DataAccessException" },
+            { "id": "C", "text": "提供 RowMapper 把 ResultSet 映射为对象" },
+            { "id": "D", "text": "自动生成数据库 schema" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "JdbcTemplate 的核心价值：资源自动释放、异常统一翻译（SQLErrorCodeSQLExceptionTranslator）、结果集映射（RowMapper / ResultSetExtractor）。schema 生成是 Hibernate/Liquibase 的工作。",
+          "referenceAnchor": "102-jdbctemplate"
+        }
+      ]
+    }
+  ]
+}

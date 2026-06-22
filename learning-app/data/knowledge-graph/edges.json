@@ -1,0 +1,72 @@
+{
+  "edges": [
+    { "source": "spring-boot", "target": "spring-framework", "relation": "extends" },
+    { "source": "spring-boot", "target": "convention-over-config", "relation": "implements" },
+    { "source": "spring-boot", "target": "auto-configuration", "relation": "contains" },
+    { "source": "spring-boot", "target": "starter", "relation": "contains" },
+    { "source": "spring-framework", "target": "ioc-container", "relation": "contains" },
+    { "source": "spring-framework", "target": "aop", "relation": "contains" },
+
+    { "source": "spring-boot-application", "target": "enable-auto-config", "relation": "contains" },
+    { "source": "spring-boot-application", "target": "component-scan", "relation": "contains" },
+    { "source": "enable-auto-config", "target": "auto-config-import-selector", "relation": "triggers" },
+    { "source": "auto-configuration", "target": "import", "relation": "depends_on" },
+    { "source": "auto-configuration", "target": "conditional", "relation": "depends_on" },
+    { "source": "auto-configuration", "target": "spring-factories", "relation": "depends_on" },
+    { "source": "import", "target": "import-selector", "relation": "contains" },
+    { "source": "import", "target": "import-registrar", "relation": "contains" },
+    { "source": "auto-config-import-selector", "target": "import-selector", "relation": "implements" },
+    { "source": "spring-factories-loader", "target": "spring-factories", "relation": "depends_on" },
+    { "source": "auto-config-import-selector", "target": "spring-factories-loader", "relation": "depends_on" },
+
+    { "source": "ioc-container", "target": "bean-factory", "relation": "implements" },
+    { "source": "application-context", "target": "bean-factory", "relation": "extends" },
+    { "source": "ioc-container", "target": "application-context", "relation": "implements" },
+    { "source": "ioc-container", "target": "bean-definition", "relation": "contains" },
+    { "source": "ioc-container", "target": "bean-lifecycle", "relation": "contains" },
+    { "source": "bean-lifecycle", "target": "bean-post-processor", "relation": "depends_on" },
+    { "source": "bean-lifecycle", "target": "three-level-cache", "relation": "depends_on" },
+    { "source": "component-scan", "target": "bean-lifecycle", "relation": "triggers" },
+
+    { "source": "spring-application", "target": "run-method", "relation": "contains" },
+    { "source": "run-method", "target": "environment", "relation": "depends_on" },
+    { "source": "run-method", "target": "application-context", "relation": "depends_on" },
+    { "source": "run-method", "target": "refresh", "relation": "triggers" },
+    { "source": "run-method", "target": "application-runner", "relation": "triggers" },
+    { "source": "run-method", "target": "spring-listener", "relation": "depends_on" },
+
+    { "source": "refresh", "target": "bean-factory-post-processor", "relation": "triggers" },
+    { "source": "refresh", "target": "bean-post-processor", "relation": "triggers" },
+    { "source": "refresh", "target": "on-refresh", "relation": "contains" },
+    { "source": "refresh", "target": "config-class-pp", "relation": "triggers" },
+    { "source": "config-class-pp", "target": "bean-factory-post-processor", "relation": "implements" },
+    { "source": "config-class-pp", "target": "import", "relation": "depends_on" },
+    { "source": "config-class-pp", "target": "component-scan", "relation": "depends_on" },
+
+    { "source": "on-refresh", "target": "web-server", "relation": "triggers" },
+    { "source": "servlet-web-context", "target": "application-context", "relation": "implements" },
+    { "source": "servlet-web-context", "target": "on-refresh", "relation": "implements" },
+    { "source": "servlet-web-context", "target": "web-server", "relation": "depends_on" },
+
+    { "source": "aop", "target": "aspectj-auto-proxy", "relation": "depends_on" },
+    { "source": "aop", "target": "advisor", "relation": "contains" },
+    { "source": "aop", "target": "jdk-proxy", "relation": "implements" },
+    { "source": "aop", "target": "cglib-proxy", "relation": "implements" },
+    { "source": "aspect-creator", "target": "bean-post-processor", "relation": "implements" },
+    { "source": "aspect-creator", "target": "advisor", "relation": "depends_on" },
+
+    { "source": "jdbc", "target": "auto-configuration", "relation": "depends_on" },
+    { "source": "jdbc", "target": "hikari", "relation": "depends_on" },
+    { "source": "mybatis", "target": "jdbc", "relation": "depends_on" },
+    { "source": "mybatis", "target": "mapper-factory-bean", "relation": "contains" },
+    { "source": "mapper-factory-bean", "target": "import-registrar", "relation": "depends_on" },
+
+    { "source": "web-mvc", "target": "dispatcher-servlet", "relation": "contains" },
+    { "source": "web-mvc", "target": "web-server", "relation": "depends_on" },
+    { "source": "dispatcher-servlet", "target": "handler-mapping", "relation": "depends_on" },
+    { "source": "web-flux", "target": "reactor", "relation": "depends_on" },
+
+    { "source": "fat-jar", "target": "spring-boot", "relation": "depends_on" },
+    { "source": "graceful-shutdown", "target": "web-server", "relation": "depends_on" }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "chapterId": "09",
+  "title": "第9章 AOP 模块的生命周期",
+  "sections": [
+    {
+      "sectionAnchor": "91-aop-入口",
+      "questions": [
+        {
+          "id": "09-001",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring AOP 的代理创建是在 Bean 生命周期的哪一阶段完成的？",
+          "options": [
+            { "id": "A", "text": "实例化前（InstantiationAwareBPP）" },
+            { "id": "B", "text": "属性填充阶段" },
+            { "id": "C", "text": "初始化后（BeanPostProcessor.postProcessAfterInitialization）" },
+            { "id": "D", "text": "Bean 销毁阶段" }
+          ],
+          "correctAnswer": ["C"],
+          "explanation": "AnnotationAwareAspectJAutoProxyCreator 实现了 BeanPostProcessor，在 postProcessAfterInitialization 中根据匹配到的 Advisor 决定是否创建代理。",
+          "referenceAnchor": "91-aop-入口"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "92-advice-执行链",
+      "questions": [
+        {
+          "id": "09-002",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "下列关于 Around 与 Before 在同一切面中的执行顺序，正确的是？",
+          "options": [
+            { "id": "A", "text": "Before 早于 Around 进入" },
+            { "id": "B", "text": "Around 进入 → Before → 目标方法 → AfterReturning → Around 退出" },
+            { "id": "C", "text": "完全并行执行" },
+            { "id": "D", "text": "Before 与 Around 互相排斥不能共存" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring AOP 的 Advice 执行顺序由 ReflectiveMethodInvocation 维护拦截器链：Around 像洋葱皮，最外层先进入；Before 在 proceed 前执行；After/AfterReturning 在 proceed 之后；Around 最后退出。",
+          "referenceAnchor": "92-advice-执行链"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="Cute chibi Kuromi illustration">
+  <title>Cute Kuromi</title>
+  <desc>手绘可爱风库洛米矢量图：黑色恶魔帽、粉色骷髅头饰、圆脸、大眼睛。</desc>
+
+  <defs>
+    <!-- 背景柔光渐变 -->
+    <radialGradient id="bgGrad" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FFF5F8"/>
+      <stop offset="100%" stop-color="#FFE0EC"/>
+    </radialGradient>
+    <!-- 帽子主体渐变（深黑到纯黑） -->
+    <linearGradient id="hoodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2B2B2B"/>
+      <stop offset="100%" stop-color="#0F0F0F"/>
+    </linearGradient>
+    <!-- 骷髅头粉色渐变 -->
+    <radialGradient id="skullGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFD0DC"/>
+      <stop offset="100%" stop-color="#FFB0C4"/>
+    </radialGradient>
+    <!-- 腮红渐变 -->
+    <radialGradient id="blushGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FF8FB1" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#FFB0C4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 背景柔光圆 -->
+  <circle cx="200" cy="200" r="195" fill="url(#bgGrad)"/>
+
+  <!-- 装饰小爱心（左上） -->
+  <g transform="translate(70 90)" opacity="0.6">
+    <path d="M0,0 C-6,-10 -18,-6 -18,4 C-18,14 0,24 0,24 C0,24 18,14 18,4 C18,-6 6,-10 0,0 Z" fill="#FFB0C4"/>
+  </g>
+  <!-- 装饰小爱心（右上） -->
+  <g transform="translate(330 110) rotate(15)" opacity="0.5">
+    <path d="M0,0 C-5,-8 -15,-5 -15,3 C-15,12 0,20 0,20 C0,20 15,12 15,3 C15,-5 5,-8 0,0 Z" fill="#FFB0C4"/>
+  </g>
+  <!-- 装饰小星星 -->
+  <g transform="translate(80 280)" fill="#FFD86B" opacity="0.8">
+    <path d="M0,-10 L3,-3 L10,-3 L4,2 L6,9 L0,5 L-6,9 L-4,2 L-10,-3 L-3,-3 Z"/>
+  </g>
+  <g transform="translate(330 290) scale(0.7)" fill="#FFD86B" opacity="0.8">
+    <path d="M0,-10 L3,-3 L10,-3 L4,2 L6,9 L0,5 L-6,9 L-4,2 L-10,-3 L-3,-3 Z"/>
+  </g>
+
+  <!-- 恶魔尾巴（从右后方探出） -->
+  <g>
+    <path d="M 320 330 Q 365 295 355 245" stroke="#0F0F0F" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <!-- 尾巴尖端的迷你骷髅头 -->
+    <g transform="translate(355 240)">
+      <circle r="14" fill="url(#skullGrad)" stroke="#0F0F0F" stroke-width="2"/>
+      <ellipse cx="-4" cy="-2" rx="2" ry="2.5" fill="#0F0F0F"/>
+      <ellipse cx="4" cy="-2" rx="2" ry="2.5" fill="#0F0F0F"/>
+      <path d="M -1.5 4 L 1.5 4 L 0 7 Z" fill="#0F0F0F"/>
+    </g>
+  </g>
+
+  <!-- 左耳（恶魔尖角） -->
+  <path d="M 138 138 L 100 55 L 180 122 Z"
+        fill="url(#hoodGrad)" stroke="#0F0F0F" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- 左耳内粉 -->
+  <path d="M 138 138 L 122 95 L 162 130 Z" fill="#FFB0C4" opacity="0.6"/>
+
+  <!-- 右耳（恶魔尖角） -->
+  <path d="M 262 138 L 300 55 L 220 122 Z"
+        fill="url(#hoodGrad)" stroke="#0F0F0F" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- 右耳内粉 -->
+  <path d="M 262 138 L 278 95 L 238 130 Z" fill="#FFB0C4" opacity="0.6"/>
+
+  <!-- 帽兜主体（圆胖水滴形） -->
+  <path d="M 100 200
+           Q 100 100 200 100
+           Q 300 100 300 200
+           L 300 280
+           Q 300 360 200 360
+           Q 100 360 100 280
+           Z"
+        fill="url(#hoodGrad)" stroke="#0F0F0F" stroke-width="3" stroke-linejoin="round"/>
+
+  <!-- 帽兜高光 -->
+  <path d="M 130 150 Q 145 125 175 118" stroke="#3A3A3A" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- 粉色骷髅头饰（额头位置） -->
+  <g transform="translate(200 175)">
+    <!-- 骷髅外圈阴影 -->
+    <ellipse cx="0" cy="2" rx="28" ry="30" fill="#0F0F0F" opacity="0.25"/>
+    <!-- 骷髅主体 -->
+    <ellipse cx="0" cy="0" rx="27" ry="29" fill="url(#skullGrad)" stroke="#0F0F0F" stroke-width="2"/>
+    <!-- 眼窝 -->
+    <ellipse cx="-10" cy="-5" rx="5" ry="6.5" fill="#0F0F0F"/>
+    <ellipse cx="10" cy="-5" rx="5" ry="6.5" fill="#0F0F0F"/>
+    <!-- 眼窝高光 -->
+    <circle cx="-8" cy="-7" r="1.2" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="12" cy="-7" r="1.2" fill="#FFFFFF" opacity="0.8"/>
+    <!-- 鼻子（倒三角） -->
+    <path d="M -2 5 L 2 5 L 0 10 Z" fill="#0F0F0F"/>
+    <!-- 牙齿缝 -->
+    <rect x="-2" y="14" width="4" height="7" fill="#0F0F0F"/>
+  </g>
+
+  <!-- 白色脸部（从帽兜下方露出） -->
+  <ellipse cx="200" cy="275" rx="88" ry="78" fill="#FFFFFF" stroke="#0F0F0F" stroke-width="3"/>
+
+  <!-- 脸颊腮红 -->
+  <ellipse cx="148" cy="298" rx="18" ry="11" fill="url(#blushGrad)"/>
+  <ellipse cx="252" cy="298" rx="18" ry="11" fill="url(#blushGrad)"/>
+
+  <!-- 眼睛（大黑眼珠 + 高光） -->
+  <g>
+    <!-- 左眼 -->
+    <ellipse cx="175" cy="268" rx="13" ry="17" fill="#0F0F0F"/>
+    <circle cx="179" cy="262" r="4.5" fill="#FFFFFF"/>
+    <circle cx="172" cy="275" r="2" fill="#FFFFFF"/>
+    <!-- 右眼 -->
+    <ellipse cx="225" cy="268" rx="13" ry="17" fill="#0F0F0F"/>
+    <circle cx="229" cy="262" r="4.5" fill="#FFFFFF"/>
+    <circle cx="222" cy="275" r="2" fill="#FFFFFF"/>
+  </g>
+
+  <!-- 小嘴（w 形，超可爱） -->
+  <path d="M 195 308 Q 200 314 205 308" stroke="#0F0F0F" stroke-width="2.5" fill="#FF8FB1" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 头顶小尖刺装饰（帽尖毛绒球替代物：粉色圆点） -->
+  <circle cx="200" cy="103" r="6" fill="#FFB0C4" stroke="#0F0F0F" stroke-width="1.5"/>
+</svg>

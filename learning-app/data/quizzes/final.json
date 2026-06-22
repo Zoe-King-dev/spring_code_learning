@@ -1,0 +1,96 @@
+{
+  "chapterId": "final",
+  "title": "全书综合测评",
+  "description": "覆盖 Spring Boot 源码所有核心主题。建议在完成全部章节后挑战。",
+  "sections": [
+    {
+      "sectionAnchor": "final",
+      "questions": [
+        {
+          "id": "fn-001",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring Boot 自动装配的全局开关注解是？",
+          "options": [
+            { "id": "A", "text": "@SpringBootApplication" },
+            { "id": "B", "text": "@EnableAutoConfiguration" },
+            { "id": "C", "text": "@Configuration" },
+            { "id": "D", "text": "@ComponentScan" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "@EnableAutoConfiguration 内部通过 @Import(AutoConfigurationImportSelector.class) 引入自动装配机制，是真正的开关。"
+        },
+        {
+          "id": "fn-002",
+          "type": "multiple",
+          "difficulty": "hard",
+          "question": "下列关于 Spring AOP 与 AspectJ 的描述哪些正确？（多选）",
+          "options": [
+            { "id": "A", "text": "Spring AOP 仅支持方法级连接点" },
+            { "id": "B", "text": "AspectJ 支持字段、构造器等更细粒度的连接点" },
+            { "id": "C", "text": "Spring AOP 通过运行时代理实现" },
+            { "id": "D", "text": "AspectJ 必须通过反射，无字节码增强能力" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "AspectJ 通过编译期/加载期字节码织入实现，能力强于 Spring AOP（仅方法连接点 + 运行时代理）。"
+        },
+        {
+          "id": "fn-003",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "Bean 销毁阶段的回调顺序是？",
+          "options": [
+            { "id": "A", "text": "@PreDestroy → DisposableBean.destroy → destroy-method" },
+            { "id": "B", "text": "destroy-method → @PreDestroy → DisposableBean.destroy" },
+            { "id": "C", "text": "DisposableBean.destroy → @PreDestroy → destroy-method" },
+            { "id": "D", "text": "三者并行执行" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "与初始化对称：@PreDestroy → DisposableBean.destroy → 自定义 destroy-method。"
+        },
+        {
+          "id": "fn-004",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "@ConditionalOnMissingBean 的语义是？",
+          "options": [
+            { "id": "A", "text": "目标 Bean 已存在时才装配（覆盖优先级）" },
+            { "id": "B", "text": "目标 Bean 不存在时才装配（用户自定义优先）" },
+            { "id": "C", "text": "无论是否存在都装配" },
+            { "id": "D", "text": "目标 Bean 必须是 @Primary" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "这是自动装配让位于用户配置的关键：默认不覆盖用户已声明的 Bean。"
+        },
+        {
+          "id": "fn-005",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "WebMvc 与 WebFlux 同时存在于 classpath 时，Spring Boot 默认装配？",
+          "options": [
+            { "id": "A", "text": "WebMvc（Servlet 优先）" },
+            { "id": "B", "text": "WebFlux（Reactive 优先）" },
+            { "id": "C", "text": "随机选择" },
+            { "id": "D", "text": "二者并存" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "SpringApplication 通过 deduceFromClasspath 判断 WebApplicationType：同时存在时 Servlet 优先，因为 spring-boot-starter-web 通常显式排除 reactive 依赖。"
+        },
+        {
+          "id": "fn-006",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列对 Spring Boot Starter 描述正确的是？（多选）",
+          "options": [
+            { "id": "A", "text": "Starter 本身通常不含业务代码，主要是依赖聚合" },
+            { "id": "B", "text": "Starter 配合 AutoConfiguration 实现 \"一键引入\"" },
+            { "id": "C", "text": "命名约定：官方 starter 以 spring-boot-starter-* 开头" },
+            { "id": "D", "text": "Starter 必须包含 main 方法" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "Starter 是 BOM + 自动配置的组合，不含 main。社区第三方 starter 推荐命名 xxx-spring-boot-starter。"
+        }
+      ]
+    }
+  ]
+}

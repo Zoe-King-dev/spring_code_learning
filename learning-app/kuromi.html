@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>库洛米 · Kuromi</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .kuromi-wrap {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 24px;
+      text-align: center;
+    }
+    .kuromi-card {
+      background: var(--card-bg, #FFFFFF);
+      border: 1px solid var(--border-color, #E5E7EB);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+    }
+    .kuromi-card img {
+      width: min(360px, 80vw);
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .kuromi-card h1 {
+      margin: 16px 0 8px;
+      font-size: 22px;
+      color: var(--text-primary, #1F2937);
+    }
+    .kuromi-card p {
+      margin: 0;
+      color: var(--text-secondary, #6B7280);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .kuromi-tag {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: #FFE0EC;
+      color: #B7385E;
+      font-size: 12px;
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      padding: 6px 14px;
+      border: 1px solid var(--border-color, #E5E7EB);
+      border-radius: 999px;
+      background: var(--card-bg, #FFFFFF);
+      cursor: pointer;
+      font-size: 13px;
+    }
+    /* 暗色主题 */
+    body.dark {
+      --card-bg: #1F2937;
+      --border-color: #374151;
+      --text-primary: #F3F4F6;
+      --text-secondary: #9CA3AF;
+      background: #111827;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="document.body.classList.toggle('dark')">切换主题</button>
+
+  <div class="kuromi-wrap">
+    <div class="kuromi-card">
+      <img src="assets/kuromi.svg" alt="Cute Kuromi" />
+      <h1>🖤 库洛米 Kuromi</h1>
+      <p>纯手写 SVG 矢量图 · 黑白主调 + 粉红点缀<br/>
+         体积小、可任意缩放，版权干净，可放心用于学习项目。</p>
+      <span class="kuromi-tag">♡ 自制 · 可爱风</span>
+    </div>
+  </div>
+</body>
+</html>

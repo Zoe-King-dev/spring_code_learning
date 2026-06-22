@@ -1,0 +1,46 @@
+{
+  "chapterId": "13",
+  "title": "第13章 Spring Boot 整合 WebFlux",
+  "sections": [
+    {
+      "sectionAnchor": "131-reactive-编程模型",
+      "questions": [
+        {
+          "id": "13-001",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring WebFlux 默认底层使用的网络框架是？",
+          "options": [
+            { "id": "A", "text": "Tomcat（NIO）" },
+            { "id": "B", "text": "Jetty" },
+            { "id": "C", "text": "Netty（reactor-netty）" },
+            { "id": "D", "text": "Servlet 3.1 Async" }
+          ],
+          "correctAnswer": ["C"],
+          "explanation": "WebFlux 默认使用 reactor-netty。也支持运行在 Servlet 3.1+ 容器、Undertow、Jetty 上，但事件驱动场景下 Netty 性能与一致性最佳。",
+          "referenceAnchor": "131-reactive-编程模型"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "132-mono-flux",
+      "questions": [
+        {
+          "id": "13-002",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列关于 Mono / Flux 的描述正确的是？（多选）",
+          "options": [
+            { "id": "A", "text": "Mono 表示 0 或 1 个元素的异步序列" },
+            { "id": "B", "text": "Flux 表示 0 到 N 个元素的异步序列" },
+            { "id": "C", "text": "二者都是冷流（订阅前不发射数据）" },
+            { "id": "D", "text": "Mono 和 Flux 不能互相转换" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "Mono/Flux 都是基于 Reactive Streams Publisher 的冷流。可通过 Mono.from(flux)、flux.next()、flux.collectList() 等方法互转。",
+          "referenceAnchor": "132-mono-flux"
+        }
+      ]
+    }
+  ]
+}

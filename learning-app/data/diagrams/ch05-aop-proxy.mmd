@@ -1,0 +1,21 @@
+flowchart TD
+    Start([Bean 初始化阶段]) --> BPP[AnnotationAwareAspectJAutoProxyCreator<br/>postProcessAfterInitialization]
+    BPP --> Find[查找适用于该 Bean 的 Advisor]
+    Find --> Has{是否存在<br/>匹配的 Advisor？}
+
+    Has -->|否| Origin[返回原始 Bean<br/>不创建代理]
+    Has -->|是| Check{目标类是否实现接口？}
+
+    Check -->|实现接口| JDK[JDK 动态代理<br/>java.lang.reflect.Proxy.newProxyInstance]
+    Check -->|未实现接口| CGLIB[CGLIB 子类代理<br/>Enhancer.create]
+
+    JDK --> Wrap[ProxyFactory 封装 Advisor 链<br/>生成代理对象]
+    CGLIB --> Wrap
+    Wrap --> Ret([返回代理 Bean 注入容器])
+    Origin --> Ret
+
+    classDef startNode fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef branchNode fill:#fff3e0,stroke:#ef6c00
+    classDef proxyNode fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    class Start,Ret startNode
+    class JDK,CGLIB proxyNode

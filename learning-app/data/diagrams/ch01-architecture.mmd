@@ -1,0 +1,25 @@
+graph TB
+    subgraph SB["Spring Boot 应用层"]
+        A1[约定大于配置<br/>Convention over Configuration]
+        A2[自动装配<br/>Auto Configuration]
+        A3[嵌入式 Web 容器<br/>Embedded Servlet Container]
+        A4[生产级特性<br/>Actuator / Health / Metrics]
+    end
+
+    subgraph SF["Spring Framework 核心层"]
+        B1[IOC 容器<br/>BeanFactory / ApplicationContext]
+        B2[AOP 模块<br/>Proxy / AspectJ]
+        B3[Data Access<br/>JDBC / ORM / Tx]
+        B4[Web 模块<br/>WebMVC / WebFlux]
+    end
+
+    SB --> SF
+
+    A2 -.依赖.-> B1
+    A2 -.条件装配.-> B3
+    A3 -.嵌入.-> B4
+
+    classDef sbStyle fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef sfStyle fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    class A1,A2,A3,A4 sbStyle
+    class B1,B2,B3,B4 sfStyle

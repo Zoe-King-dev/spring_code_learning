@@ -1,0 +1,47 @@
+{
+  "01": [
+    {
+      "file": "ch01-architecture.mmd",
+      "title": "Spring Boot 与 Spring Framework 的层级关系",
+      "description": "Spring Boot 在 Spring Framework 之上封装了约定大于配置、自动装配、嵌入式容器与生产级特性。"
+    }
+  ],
+  "02": [
+    {
+      "file": "ch02-import-modes.mmd",
+      "title": "@Import 注解的四种导入方式",
+      "description": "@Import 是模块装配的核心，根据被导入类的类型走不同的注册路径。"
+    },
+    {
+      "file": "ch02-autoconfig-sequence.mmd",
+      "title": "Spring Boot 自动装配执行时序",
+      "description": "从 SpringApplication.run() 触发到最终装配 Configuration 类的完整调用过程。"
+    }
+  ],
+  "03": [
+    {
+      "file": "ch03-ioc-classes.mmd",
+      "title": "IOC 容器继承体系（核心接口与实现）",
+      "description": "BeanFactory 是根接口，ApplicationContext 在其基础上扩展企业级能力。"
+    },
+    {
+      "file": "ch03-bean-lifecycle.mmd",
+      "title": "Bean 的完整生命周期",
+      "description": "从实例化到销毁，每一步都为扩展点（BeanPostProcessor、Aware、@PostConstruct 等）留出钩子。"
+    }
+  ],
+  "04": [
+    {
+      "file": "ch04-springapp-run.mmd",
+      "title": "SpringApplication.run() 主流程",
+      "description": "10 余个关键步骤构成应用启动的骨架，refresh 是 IOC 容器最终装配的入口。"
+    }
+  ],
+  "05": [
+    {
+      "file": "ch05-aop-proxy.mmd",
+      "title": "AOP 代理创建流程",
+      "description": "Spring 根据是否实现接口选择 JDK 动态代理或 CGLIB 子类代理。"
+    }
+  ]
+}

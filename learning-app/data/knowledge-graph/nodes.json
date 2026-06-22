@@ -1,0 +1,64 @@
+{
+  "nodes": [
+    { "id": "spring-boot", "label": "Spring Boot", "chapterId": "01", "type": "concept", "description": "在 Spring Framework 之上提供自动装配、约定优于配置的快速开发框架" },
+    { "id": "spring-framework", "label": "Spring Framework", "chapterId": "01", "type": "concept", "description": "IOC + AOP 核心容器" },
+    { "id": "convention-over-config", "label": "约定大于配置", "chapterId": "01", "type": "concept", "description": "Spring Boot 减少配置量的核心思想" },
+    { "id": "starter", "label": "Starter", "chapterId": "01", "type": "concept", "description": "依赖聚合包，配合 AutoConfiguration 一键引入场景" },
+
+    { "id": "auto-configuration", "label": "自动装配", "chapterId": "02", "type": "mechanism", "description": "根据 classpath 与 @Conditional 自动注册 Bean" },
+    { "id": "enable-auto-config", "label": "@EnableAutoConfiguration", "chapterId": "02", "type": "annotation", "description": "自动装配总开关注解" },
+    { "id": "spring-boot-application", "label": "@SpringBootApplication", "chapterId": "01", "type": "annotation", "description": "组合注解：@SpringBootConfiguration + @EnableAutoConfiguration + @ComponentScan" },
+    { "id": "import", "label": "@Import", "chapterId": "02", "type": "annotation", "description": "模块装配的核心：支持四种导入方式" },
+    { "id": "import-selector", "label": "ImportSelector", "chapterId": "02", "type": "class", "description": "返回需要导入的类名数组" },
+    { "id": "import-registrar", "label": "ImportBeanDefinitionRegistrar", "chapterId": "02", "type": "class", "description": "手动注册 BeanDefinition" },
+    { "id": "conditional", "label": "@Conditional", "chapterId": "02", "type": "annotation", "description": "条件装配，控制 Bean 是否生效" },
+    { "id": "spring-factories", "label": "spring.factories", "chapterId": "02", "type": "mechanism", "description": "Spring Boot SPI：META-INF 配置自动配置类" },
+    { "id": "spring-factories-loader", "label": "SpringFactoriesLoader", "chapterId": "02", "type": "class", "description": "读取 spring.factories 的工具类" },
+    { "id": "auto-config-import-selector", "label": "AutoConfigurationImportSelector", "chapterId": "02", "type": "class", "description": "把所有 AutoConfiguration 类作为候选导入" },
+
+    { "id": "ioc-container", "label": "IOC 容器", "chapterId": "03", "type": "concept", "description": "管理 Bean 的创建、依赖与生命周期" },
+    { "id": "bean-factory", "label": "BeanFactory", "chapterId": "03", "type": "class", "description": "IOC 容器根接口" },
+    { "id": "application-context", "label": "ApplicationContext", "chapterId": "03", "type": "class", "description": "BeanFactory 的子接口，提供事件、国际化等企业能力" },
+    { "id": "bean-definition", "label": "BeanDefinition", "chapterId": "03", "type": "concept", "description": "Bean 的元数据描述" },
+    { "id": "bean-lifecycle", "label": "Bean 生命周期", "chapterId": "03", "type": "mechanism", "description": "实例化 → 属性填充 → Aware → BPP → 初始化 → 使用 → 销毁" },
+    { "id": "bean-post-processor", "label": "BeanPostProcessor", "chapterId": "03", "type": "class", "description": "Bean 初始化前后扩展点" },
+    { "id": "bean-factory-post-processor", "label": "BeanFactoryPostProcessor", "chapterId": "03", "type": "class", "description": "BeanDefinition 阶段的修改入口" },
+    { "id": "three-level-cache", "label": "三级缓存", "chapterId": "03", "type": "mechanism", "description": "解决单例 Bean 循环依赖" },
+    { "id": "component-scan", "label": "@ComponentScan", "chapterId": "03", "type": "annotation", "description": "扫描指定包路径注册 Bean" },
+
+    { "id": "spring-application", "label": "SpringApplication", "chapterId": "04", "type": "class", "description": "Spring Boot 启动引导类" },
+    { "id": "run-method", "label": "run() 流程", "chapterId": "04", "type": "mechanism", "description": "11 个关键步骤组成应用启动骨架" },
+    { "id": "application-runner", "label": "ApplicationRunner / CommandLineRunner", "chapterId": "04", "type": "class", "description": "启动完成后的回调接口" },
+    { "id": "environment", "label": "Environment", "chapterId": "06", "type": "class", "description": "封装属性源 PropertySource" },
+    { "id": "spring-listener", "label": "SpringApplicationRunListener", "chapterId": "04", "type": "class", "description": "贯穿 run() 全过程的事件监听器" },
+
+    { "id": "aop", "label": "AOP", "chapterId": "05", "type": "concept", "description": "面向切面编程，横切关注点的解耦" },
+    { "id": "aspectj-auto-proxy", "label": "@EnableAspectJAutoProxy", "chapterId": "05", "type": "annotation", "description": "AOP 开关" },
+    { "id": "aspect-creator", "label": "AnnotationAwareAspectJAutoProxyCreator", "chapterId": "09", "type": "class", "description": "在 BPP.postProcessAfterInitialization 中创建 AOP 代理" },
+    { "id": "advisor", "label": "Advisor", "chapterId": "05", "type": "concept", "description": "Pointcut + Advice 的组合" },
+    { "id": "jdk-proxy", "label": "JDK 动态代理", "chapterId": "05", "type": "mechanism", "description": "目标类实现接口时的默认代理方式" },
+    { "id": "cglib-proxy", "label": "CGLIB 子类代理", "chapterId": "05", "type": "mechanism", "description": "目标类无接口时的代理方式" },
+
+    { "id": "refresh", "label": "refresh()", "chapterId": "07", "type": "mechanism", "description": "AbstractApplicationContext.refresh 的 13 个关键步骤" },
+    { "id": "config-class-pp", "label": "ConfigurationClassPostProcessor", "chapterId": "07", "type": "class", "description": "解析 @Configuration / @Import / @ComponentScan" },
+    { "id": "on-refresh", "label": "onRefresh", "chapterId": "08", "type": "mechanism", "description": "refresh 第 11 步，Servlet 容器在此启动嵌入式 Web 服务器" },
+
+    { "id": "web-server", "label": "嵌入式 Web 容器", "chapterId": "08", "type": "concept", "description": "Tomcat / Jetty / Undertow / Netty" },
+    { "id": "servlet-web-context", "label": "ServletWebServerApplicationContext", "chapterId": "08", "type": "class", "description": "Servlet 模式下的应用上下文" },
+
+    { "id": "jdbc", "label": "JDBC 集成", "chapterId": "10", "type": "concept", "description": "数据源 + JdbcTemplate 自动装配" },
+    { "id": "hikari", "label": "HikariCP", "chapterId": "10", "type": "class", "description": "Spring Boot 2.x 默认连接池" },
+    { "id": "mybatis", "label": "MyBatis 集成", "chapterId": "11", "type": "concept", "description": "Mapper 接口扫描 + SqlSessionTemplate" },
+    { "id": "mapper-factory-bean", "label": "MapperFactoryBean", "chapterId": "11", "type": "class", "description": "每个 Mapper 接口的工厂 Bean" },
+
+    { "id": "web-mvc", "label": "WebMvc 集成", "chapterId": "12", "type": "concept", "description": "Servlet 栈，DispatcherServlet 中心调度" },
+    { "id": "dispatcher-servlet", "label": "DispatcherServlet", "chapterId": "12", "type": "class", "description": "请求分发的中心组件" },
+    { "id": "handler-mapping", "label": "HandlerMapping", "chapterId": "12", "type": "class", "description": "根据请求映射到 Handler" },
+
+    { "id": "web-flux", "label": "WebFlux 集成", "chapterId": "13", "type": "concept", "description": "响应式栈，基于 Reactor 与 Netty" },
+    { "id": "reactor", "label": "Reactor (Mono/Flux)", "chapterId": "13", "type": "class", "description": "异步流的核心类型" },
+
+    { "id": "fat-jar", "label": "可执行 jar", "chapterId": "14", "type": "concept", "description": "BOOT-INF 结构 + LaunchedURLClassLoader" },
+    { "id": "graceful-shutdown", "label": "优雅停机", "chapterId": "14", "type": "mechanism", "description": "server.shutdown=graceful，等待请求完成" }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "chapterId": "01",
+  "title": "第1章 Spring Boot 整体概述",
+  "sections": [
+    {
+      "sectionAnchor": "11-spring-framework-的核心特性",
+      "questions": [
+        {
+          "id": "01-001",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring Framework 的两大核心特性是？",
+          "options": [
+            { "id": "A", "text": "IOC 与 AOP" },
+            { "id": "B", "text": "JDBC 与 ORM" },
+            { "id": "C", "text": "MVC 与 WebFlux" },
+            { "id": "D", "text": "事务 与 安全" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "IOC（控制反转）负责对象的创建与依赖管理，AOP（面向切面编程）负责横切关注点的解耦，两者共同构成 Spring 的核心。",
+          "referenceAnchor": "11-spring-framework-的核心特性"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "12-spring-boot-的核心特性",
+      "questions": [
+        {
+          "id": "01-002",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列哪些是 Spring Boot 的核心特性？（多选）",
+          "options": [
+            { "id": "A", "text": "约定大于配置" },
+            { "id": "B", "text": "自动装配" },
+            { "id": "C", "text": "嵌入式 Web 容器" },
+            { "id": "D", "text": "强制使用 Maven 构建" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "Spring Boot 的四大核心特性是：约定大于配置、自动装配、嵌入式 Web 容器、生产级特性（健康检查/监控）。它对构建工具没有强制要求。",
+          "referenceAnchor": "12-spring-boot-的核心特性"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "13-快速创建第一个-spring-boot-项目",
+      "questions": [
+        {
+          "id": "01-003",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring Boot 项目的主类通常使用哪个注解标记？",
+          "options": [
+            { "id": "A", "text": "@SpringBootApplication" },
+            { "id": "B", "text": "@Component" },
+            { "id": "C", "text": "@RestController" },
+            { "id": "D", "text": "@Configuration" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "@SpringBootApplication 是组合注解，包含 @SpringBootConfiguration、@EnableAutoConfiguration、@ComponentScan，是 Spring Boot 应用的启动入口标识。",
+          "referenceAnchor": "13-快速创建第一个-spring-boot-项目"
+        }
+      ]
+    }
+  ]
+}

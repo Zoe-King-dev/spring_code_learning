@@ -1,0 +1,46 @@
+{
+  "chapterId": "14",
+  "title": "第14章 运行 Spring Boot 应用",
+  "sections": [
+    {
+      "sectionAnchor": "141-打包与运行",
+      "questions": [
+        {
+          "id": "14-001",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring Boot 的可执行 jar（fat jar）使用哪种类加载器加载嵌套依赖？",
+          "options": [
+            { "id": "A", "text": "AppClassLoader" },
+            { "id": "B", "text": "LaunchedURLClassLoader（spring-boot-loader）" },
+            { "id": "C", "text": "ExtClassLoader" },
+            { "id": "D", "text": "Bootstrap ClassLoader" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "spring-boot-loader 提供 LaunchedURLClassLoader，从 jar 内部的 BOOT-INF/lib 与 BOOT-INF/classes 加载类与资源，绕过标准 jar 嵌套 jar 的限制。",
+          "referenceAnchor": "141-打包与运行"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "142-优雅停机",
+      "questions": [
+        {
+          "id": "14-002",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring Boot 2.3+ 开启优雅停机的配置项是？",
+          "options": [
+            { "id": "A", "text": "server.shutdown=graceful" },
+            { "id": "B", "text": "spring.lifecycle.shutdown=true" },
+            { "id": "C", "text": "spring.profiles.active=graceful" },
+            { "id": "D", "text": "management.endpoint.shutdown.enabled=true" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "server.shutdown=graceful 让嵌入式容器在收到关闭信号时停止接受新请求，等待进行中请求完成；超时由 spring.lifecycle.timeout-per-shutdown-phase 控制。",
+          "referenceAnchor": "142-优雅停机"
+        }
+      ]
+    }
+  ]
+}

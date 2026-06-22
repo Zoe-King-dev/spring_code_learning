@@ -1,0 +1,77 @@
+{
+  "chapterId": "04",
+  "title": "第4章 核心引导：SpringApplication",
+  "sections": [
+    {
+      "sectionAnchor": "41-springapplication-概述",
+      "questions": [
+        {
+          "id": "04-001",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "SpringApplication.run() 的最终返回值类型是？",
+          "options": [
+            { "id": "A", "text": "ApplicationContext" },
+            { "id": "B", "text": "ConfigurableApplicationContext" },
+            { "id": "C", "text": "BeanFactory" },
+            { "id": "D", "text": "void（无返回值）" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "run() 方法返回 ConfigurableApplicationContext，它是 ApplicationContext 的子接口，提供更多配置能力（如 refresh、close）。",
+          "referenceAnchor": "41-springapplication-概述"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "42-run-方法的执行流程",
+      "questions": [
+        {
+          "id": "04-002",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "SpringApplication.run() 在执行 refreshContext 之前必做的事是？",
+          "options": [
+            { "id": "A", "text": "启动嵌入式 Tomcat" },
+            { "id": "B", "text": "准备 Environment 并触发 prepareContext" },
+            { "id": "C", "text": "扫描所有 @Component" },
+            { "id": "D", "text": "执行 CommandLineRunner" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "run() 的典型执行顺序：① 创建 SpringApplicationRunListeners → ② prepareEnvironment → ③ printBanner → ④ createApplicationContext → ⑤ prepareContext → ⑥ refreshContext → ⑦ afterRefresh → ⑧ callRunners。",
+          "referenceAnchor": "42-run-方法的执行流程"
+        },
+        {
+          "id": "04-003",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列哪些接口可以在 SpringApplication 启动完成后被回调？（多选）",
+          "options": [
+            { "id": "A", "text": "ApplicationRunner" },
+            { "id": "B", "text": "CommandLineRunner" },
+            { "id": "C", "text": "InitializingBean" },
+            { "id": "D", "text": "SpringApplicationRunListener" }
+          ],
+          "correctAnswer": ["A", "B"],
+          "explanation": "ApplicationRunner 和 CommandLineRunner 都在 callRunners 阶段被调用，区别在于参数封装：CommandLineRunner 接收 String[]，ApplicationRunner 接收 ApplicationArguments。InitializingBean 是 Bean 初始化阶段的回调，SpringApplicationRunListener 监听 run 过程中的事件。",
+          "referenceAnchor": "42-run-方法的执行流程"
+        },
+        {
+          "id": "04-fill-001",
+          "type": "fill-blank",
+          "difficulty": "hard",
+          "question": "补全 SpringApplication.run() 主流程的关键调用",
+          "lang": "java",
+          "code": "public ConfigurableApplicationContext run(String... args) {\n    // 准备 Environment\n    ConfigurableEnvironment env = ___1___(listeners, applicationArguments);\n    // 创建上下文（根据 WebApplicationType）\n    context = ___2___();\n    // 装填上下文：Initializer、source、监听器\n    prepareContext(...);\n    // 刷新容器（refresh 的入口）\n    ___3___(context);\n    // 执行 ApplicationRunner / CommandLineRunner\n    callRunners(context, applicationArguments);\n    return context;\n}",
+          "blanks": [
+            { "id": "1", "answer": "prepareEnvironment", "hint": "准备 Environment 的方法" },
+            { "id": "2", "answer": "createApplicationContext", "hint": "创建上下文实例" },
+            { "id": "3", "answer": "refreshContext", "hint": "刷新上下文" }
+          ],
+          "caseSensitive": false,
+          "explanation": "run() 的骨架可简化为：prepareEnvironment → createApplicationContext → prepareContext → refreshContext → callRunners。每一步在源码中都是同名方法。",
+          "referenceAnchor": "42-run-方法的执行流程"
+        }
+      ]
+    }
+  ]
+}

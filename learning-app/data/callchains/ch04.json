@@ -1,0 +1,62 @@
+{
+  "chapterId": "04",
+  "title": "SpringApplication.run() 步进式调用链",
+  "description": "跟着 11 个关键步骤一步一步看 Spring Boot 应用如何启动。",
+  "steps": [
+    {
+      "method": "SpringApplication.run(args)",
+      "code": "public ConfigurableApplicationContext run(String... args) {\n    StopWatch stopWatch = new StopWatch();\n    stopWatch.start();\n    DefaultBootstrapContext bootstrapContext = createBootstrapContext();\n    ConfigurableApplicationContext context = null;\n    ...\n}",
+      "note": "入口方法。创建计时器与 BootstrapContext，准备承载整个启动过程。"
+    },
+    {
+      "method": "getRunListeners(args)",
+      "code": "SpringApplicationRunListeners listeners = getRunListeners(args);\nlisteners.starting(bootstrapContext, this.mainApplicationClass);",
+      "note": "从 spring.factories 加载 SpringApplicationRunListener，发布 ApplicationStartingEvent。"
+    },
+    {
+      "method": "prepareEnvironment(listeners, ...)",
+      "code": "ConfigurableEnvironment environment = prepareEnvironment(\n    listeners, bootstrapContext, applicationArguments);",
+      "note": "创建 Environment（按 WebApplicationType 选择子类），加载 application.properties / yml，发布 ApplicationEnvironmentPreparedEvent。"
+    },
+    {
+      "method": "printBanner(environment)",
+      "code": "Banner printedBanner = printBanner(environment);",
+      "note": "打印 banner.txt 或默认 Spring 图标。可通过 spring.main.banner-mode=off 关闭。"
+    },
+    {
+      "method": "createApplicationContext()",
+      "code": "context = createApplicationContext();\n// SERVLET -> AnnotationConfigServletWebServerApplicationContext\n// REACTIVE -> AnnotationConfigReactiveWebServerApplicationContext\n// NONE    -> AnnotationConfigApplicationContext",
+      "note": "根据 WebApplicationType 实例化 ApplicationContext。Servlet 应用走 ServletWebServer 版本。"
+    },
+    {
+      "method": "prepareContext(...)",
+      "code": "prepareContext(bootstrapContext, context, environment, listeners,\n    applicationArguments, printedBanner);",
+      "note": "上下文准备：为 context 设置 Environment、应用所有 ApplicationContextInitializer、注册主 source（@SpringBootApplication 类）。"
+    },
+    {
+      "method": "refreshContext(context)",
+      "code": "refreshContext(context);\n// -> AbstractApplicationContext.refresh()",
+      "note": "调用 refresh()！这一步进入 Spring Framework 13 步 IOC 容器初始化流程。"
+    },
+    {
+      "method": "afterRefresh(context, args)",
+      "code": "afterRefresh(context, applicationArguments);",
+      "note": "默认空实现的扩展点，子类可重写做后置处理。"
+    },
+    {
+      "method": "listeners.started(context)",
+      "code": "stopWatch.stop();\nlisteners.started(context, stopWatch.getTotalTime(...));",
+      "note": "停止计时，发布 ApplicationStartedEvent。"
+    },
+    {
+      "method": "callRunners(context, applicationArguments)",
+      "code": "callRunners(context, applicationArguments);\n// 调用所有 ApplicationRunner / CommandLineRunner",
+      "note": "依次执行所有用户的 Runner，按 @Order 排序。"
+    },
+    {
+      "method": "listeners.running(context)",
+      "code": "listeners.running(context);\nreturn context;",
+      "note": "发布 ApplicationReadyEvent。返回完成初始化的 context。"
+    }
+  ]
+}

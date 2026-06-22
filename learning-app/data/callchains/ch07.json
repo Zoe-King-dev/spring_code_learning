@@ -1,0 +1,72 @@
+{
+  "chapterId": "07",
+  "title": "AbstractApplicationContext.refresh() 步进式调用链",
+  "description": "IOC 容器初始化的 13 个关键步骤。一步一步理解 Bean 是如何被发现、注册、实例化的。",
+  "steps": [
+    {
+      "method": "prepareRefresh()",
+      "code": "this.startupDate = System.currentTimeMillis();\nthis.closed.set(false);\nthis.active.set(true);\n// 初始化 PropertySources、校验必需属性、清空 earlyApplicationEvents",
+      "note": "1/13 准备刷新：标记容器活动状态、初始化属性源。"
+    },
+    {
+      "method": "obtainFreshBeanFactory()",
+      "code": "refreshBeanFactory();\nreturn getBeanFactory();",
+      "note": "2/13 获取 BeanFactory：注解版本下直接返回已有的 DefaultListableBeanFactory；XML 版本会重新解析 BeanDefinition。"
+    },
+    {
+      "method": "prepareBeanFactory(beanFactory)",
+      "code": "beanFactory.setBeanClassLoader(getClassLoader());\nbeanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));\nbeanFactory.ignoreDependencyInterface(BeanNameAware.class);\n// 注册 Environment / SystemProperties / SystemEnvironment 作为单例 Bean",
+      "note": "3/13 准备 BeanFactory：配置 ClassLoader、SpEL、忽略某些 Aware 自动注入、注册系统 Bean。"
+    },
+    {
+      "method": "postProcessBeanFactory(beanFactory)",
+      "code": "// 空方法，子类扩展点\n// 如 ServletWebServerApplicationContext 在此注册 ServletContextAwareProcessor",
+      "note": "4/13 子类扩展点：用于在 BFPP 调用前修改 BeanFactory。"
+    },
+    {
+      "method": "invokeBeanFactoryPostProcessors(beanFactory)",
+      "code": "PostProcessorRegistrationDelegate\n    .invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());\n// 关键调用 ConfigurationClassPostProcessor.processConfigBeanDefinitions()",
+      "note": "5/13 ⭐ 调用所有 BeanFactoryPostProcessor。ConfigurationClassPostProcessor 在此扫描 @ComponentScan、解析 @Import、注册自动配置类的 BeanDefinition。"
+    },
+    {
+      "method": "registerBeanPostProcessors(beanFactory)",
+      "code": "PostProcessorRegistrationDelegate\n    .registerBeanPostProcessors(beanFactory, this);",
+      "note": "6/13 注册所有 BeanPostProcessor，注意此时是注册（实例化）而非调用。AOP 的 AnnotationAwareAspectJAutoProxyCreator 在此实例化。"
+    },
+    {
+      "method": "initMessageSource()",
+      "code": "// 初始化国际化 MessageSource\nif (!beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) { ... }",
+      "note": "7/13 初始化消息源（i18n 支持）。"
+    },
+    {
+      "method": "initApplicationEventMulticaster()",
+      "code": "// 初始化事件广播器\nthis.applicationEventMulticaster = new SimpleApplicationEventMulticaster(beanFactory);",
+      "note": "8/13 初始化事件多播器，后续 publishEvent 通过它分发。"
+    },
+    {
+      "method": "onRefresh()",
+      "code": "// 子类扩展点\n// ServletWebServerApplicationContext 在此调用 createWebServer() 启动嵌入式 Tomcat！",
+      "note": "9/13 ⭐ 子类钩子：Web 应用在此启动嵌入式容器！"
+    },
+    {
+      "method": "registerListeners()",
+      "code": "for (ApplicationListener<?> listener : getApplicationListeners()) {\n    getApplicationEventMulticaster().addApplicationListener(listener);\n}\n// 发布早期事件",
+      "note": "10/13 把所有 ApplicationListener 注册到事件广播器。"
+    },
+    {
+      "method": "finishBeanFactoryInitialization(beanFactory)",
+      "code": "beanFactory.freezeConfiguration();\nbeanFactory.preInstantiateSingletons();",
+      "note": "11/13 ⭐ 实例化所有非懒加载的单例 Bean！触发完整 Bean 生命周期：实例化 → 属性填充 → Aware → BPP → @PostConstruct → InitializingBean → init-method → BPP.after（AOP 代理在此织入）。"
+    },
+    {
+      "method": "finishRefresh()",
+      "code": "clearResourceCaches();\ninitLifecycleProcessor();\ngetLifecycleProcessor().onRefresh();\npublishEvent(new ContextRefreshedEvent(this));",
+      "note": "12/13 收尾：清理缓存、启动 LifecycleProcessor、发布 ContextRefreshedEvent。"
+    },
+    {
+      "method": "resetCommonCaches()",
+      "code": "ReflectionUtils.clearCache();\nAnnotationUtils.clearCache();\nResolvableType.clearCache();\nCachedIntrospectionResults.clearClassLoader(getClassLoader());",
+      "note": "13/13 异常时或 finally 块：清空反射/注解等公共缓存。refresh() 完成！"
+    }
+  ]
+}

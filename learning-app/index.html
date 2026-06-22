@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spring Boot 源码学习</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/content.css">
+  <link rel="stylesheet" href="css/quiz.css">
+  <link rel="stylesheet" href="css/phase3.css">
+
+  <!-- Mermaid for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <!-- Marked for Markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Highlight.js for code -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+
+  <!-- D3.js v7 for knowledge graph -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+
+  <style>
+    /* ============ 教育平台增强样式 ============ */
+
+    /* 英雄区域 */
+    .hero-section {
+      background: linear-gradient(135deg, var(--color-primary) 0%, #667eea 100%);
+      color: white;
+      padding: 3rem 2rem;
+      border-radius: 16px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .hero-section h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: white;
+    }
+
+    .hero-section p {
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+
+    /* 章节卡片网格 */
+    .chapter-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .chapter-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chapter-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+      border-color: var(--color-primary);
+    }
+
+    .chapter-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-primary), #667eea);
+    }
+
+    .chapter-card .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .chapter-card .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--color-text);
+    }
+
+    .chapter-card .card-desc {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    .chapter-card .card-meta {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .difficulty-tag {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .diff-easy { background: #e8f5e9; color: #2e7d32; }
+    .diff-core { background: #e3f2fd; color: #1565c0; }
+    .diff-advanced { background: #fff3e0; color: #ef6c00; }
+    .diff-applied { background: #f3e5f5; color: #7b1fa2; }
+    .diff-hard { background: #ffebee; color: #c62828; }
+
+    /* 知识点卡片 */
+    .knowledge-card {
+      background: var(--color-surface);
+      border-left: 4px solid var(--color-primary);
+      border-radius: 0 8px 8px 0;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .knowledge-card.tip {
+      border-left-color: #4caf50;
+      background: #f8fff8;
+    }
+
+    .knowledge-card.warning {
+      border-left-color: #ff9800;
+      background: #fffbf0;
+    }
+
+    .knowledge-card.key-concept {
+      border-left-color: #2196f3;
+      background: #f0f7ff;
+    }
+
+    .knowledge-card .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .knowledge-card .card-content {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* 架构图区域 */
+    .diagram-container {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .diagram-container .diagram-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+
+    .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* 代码对比 */
+    .code-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .code-comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .code-block-enhanced {
+      background: var(--color-code-bg);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .code-block-enhanced .code-header {
+      background: rgba(0,0,0,0.2);
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      color: var(--color-code-text);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .code-block-enhanced pre {
+      margin: 0;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+
+    /* 流程步骤 */
+    .flow-steps {
+      margin: 1.5rem 0;
+    }
+
+    .flow-step {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .flow-step:last-child {
+      border-bottom: none;
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .step-desc {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+    }
+
+    /* 交互式图表 */
+    .interactive-diagram {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .diagram-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .diagram-btn {
+      padding: 0.5rem 1rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .diagram-btn:hover, .diagram-btn.active {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+    }
+
+    /* 进度追踪 */
+    .progress-tracker {
+      background: var(--color-surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .progress-bar-container {
+      background: var(--color-border);
+      border-radius: 10px;
+      height: 8px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), #667eea);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .progress-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+
+    /* 学习模式切换 */
+    .mode-toggle {
+      display: flex;
+      background: var(--color-bg);
+      border-radius: 8px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .mode-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .mode-btn.active {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 2rem 1rem;
+      }
+
+      .hero-section h1 {
+        font-size: 1.5rem;
+      }
+
+      .chapter-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 渲染内容的增强样式 */
+    .rendered-content .hero-inline {
+      background: linear-gradient(135deg, var(--color-primary) 0%, #667eea 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+    }
+
+    .rendered-content .hero-inline h2 {
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .rendered-content .inline-diagram {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .rendered-content .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .rendered-content .comparison-item {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .rendered-content .comparison-item h4 {
+      margin-top: 0;
+      color: var(--color-primary);
+    }
+
+    /* ============ 库洛米吉祥物 ============ */
+    .topbar-mascot {
+      width: 32px;
+      height: 32px;
+      vertical-align: middle;
+      margin-right: 8px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .topbar-mascot:hover {
+      transform: rotate(-12deg) scale(1.15);
+    }
+
+    .topbar-logo {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* 首页 hero 里的库洛米 */
+    .hero-kuromi {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 1rem;
+      display: block;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+      animation: kuromi-float 3s ease-in-out infinite;
+    }
+
+    @keyframes kuromi-float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- ============ 顶栏 ============ -->
+  <header class="topbar" id="topbar">
+    <span class="topbar-logo" id="topbar-logo">
+      <img src="assets/kuromi.svg" alt="Kuromi" class="topbar-mascot" />
+      <span>Spring Boot 源码学习</span>
+    </span>
+    <div class="topbar-actions">
+      <div class="mode-toggle" id="mode-toggle">
+        <button class="mode-btn active" data-mode="read">阅读</button>
+        <button class="mode-btn" data-mode="learn">学习</button>
+      </div>
+      <div class="search-wrap" id="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="search-input" placeholder="搜索全书...">
+        <div class="search-panel" id="search-panel"></div>
+      </div>
+      <button class="tb-btn" id="btn-bookmarks" title="书签 (B)">🔖</button>
+      <button class="tb-btn" id="btn-progress-panel" title="学习进度">📊</button>
+      <button class="tb-btn" id="btn-quiz-center" title="测验中心（综合测验 / 错题本 / 成就）">🏆</button>
+      <button class="tb-btn" id="btn-theme" title="切换主题">🌙</button>
+    </div>
+  </header>
+
+  <!-- ============ 学习路线图 ============ -->
+  <section class="roadmap" id="roadmap">
+    <div class="roadmap-inner" id="roadmap-inner"></div>
+    <button class="roadmap-toggle" id="roadmap-toggle" title="折叠路线图">▴ 收起路线图</button>
+  </section>
+
+  <!-- ============ 阅读区 ============ -->
+  <div class="reader" id="reader">
+    <!-- 章内目录侧栏 -->
+    <aside class="toc-sidebar" id="toc-sidebar">
+      <div class="toc-header">
+        <span class="toc-title">📑 本章目录</span>
+        <span class="toc-progress" id="toc-progress"></span>
+      </div>
+      <nav class="toc-nav" id="toc-nav"></nav>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main-content rendered-content" id="main-content"></main>
+  </div>
+
+  <!-- ============ 底部导航 ============ -->
+  <footer class="bottom-nav">
+    <button class="nav-btn" id="nav-prev"></button>
+    <button class="nav-btn nav-btn--next" id="nav-next"></button>
+  </footer>
+</div>
+
+<!-- ============ 浮动元素 ============ -->
+<div class="bookmark-panel" id="bookmark-panel">
+  <div class="panel-head">
+    <h3>🔖 书签</h3>
+    <button class="btn btn--ghost btn--sm" id="bookmark-close">✕</button>
+  </div>
+  <div id="bookmark-list"></div>
+</div>
+
+<div class="progress-panel" id="progress-panel">
+  <div class="panel-head">
+    <h3>📊 学习进度</h3>
+    <button class="btn btn--ghost btn--sm" id="progress-close">✕</button>
+  </div>
+  <div id="progress-detail"></div>
+</div>
+
+<button class="back-to-top" id="back-to-top" title="回到顶部">↑</button>
+<div class="toast" id="toast"></div>
+
+<!-- ============ JS ============ -->
+<script src="js/config.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/router.js"></script>
+<script src="js/search.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/diagrams.js"></script>
+<script src="js/achievement.js"></script>
+<script src="js/knowledge-graph.js"></script>
+<script src="js/learning-path.js"></script>
+<script src="js/callchain.js"></script>
+<script src="js/source-refs.js"></script>
+<script src="js/notes.js"></script>
+<script src="js/quiz-center.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+  // ============ 教育平台增强功能 ============
+
+  // 初始化 Mermaid
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'default',
+    securityLevel: 'loose',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    flowchart: { useMaxWidth: true, htmlLabels: true },
+    sequence: { useMaxWidth: true }
+  });
+
+  // 学习模式管理器
+  const LearningMode = {
+    currentMode: 'read',
+
+    init() {
+      const toggle = document.getElementById('mode-toggle');
+      toggle.addEventListener('click', (e) => {
+        if (e.target.classList.contains('mode-btn')) {
+          this.setMode(e.target.dataset.mode);
+        }
+      });
+    },
+
+    setMode(mode) {
+      this.currentMode = mode;
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+      });
+
+      if (mode === 'learn') {
+        this.enhanceContent();
+      }
+    },
+
+    enhanceContent() {
+      // 为内容添加交互元素
+      const content = document.getElementById('main-content');
+      if (!content) return;
+
+      // 渲染 Mermaid 图表
+      content.querySelectorAll('.mermaid:not([data-rendered]').forEach(async (el) => {
+        el.setAttribute('data-rendered', 'true');
+        try {
+          const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+          const { svg } = await mermaid.render(id, el.textContent);
+          el.innerHTML = svg;
+        } catch (e) {
+          console.error('Mermaid error:', e);
+        }
+      });
+    }
+  };
+
+  // 知识卡片渲染增强
+  const KnowledgeCards = {
+    render(type, title, content) {
+      const icons = {
+        tip: '💡',
+        warning: '⚠️',
+        keyConcept: '🎯',
+        summary: '📝'
+      };
+
+      return `
+        <div class="knowledge-card ${type}">
+          <div class="card-header">
+            <span>${icons[type] || '📖'}</span>
+            <span>${title}</span>
+          </div>
+          <div class="card-content">${content}</div>
+        </div>
+      `;
+    }
+  };
+
+  // 章节介绍数据
+  const CHAPTER_INTROS = {
+    '01': {
+      icon: '🏠',
+      description: '从整体层面了解 Spring Boot 与 Spring Framework 的关系，掌握 Spring Boot 的核心特性和技术体系。',
+      keyPoints: ['Spring Framework 核心特性：IOC 与 AOP', 'Spring Boot 四大核心特性', '快速创建第一个 Spring Boot 项目'],
+      diagram: `
+	graph TB
+	    A[Spring Boot 应用] --> B[约定大于配置]
+	    A --> C[自动装配]
+	    A --> D[嵌入式容器]
+	    A --> E[生产级特性]
+	    B --> F[Starter 场景启动器]
+	    C --> G[@EnableAutoConfiguration]
+	    D --> H[Tomcat/Jetty/Undertow]
+	    E --> I[健康检查/监控]`
+    },
+    '02': {
+      icon: '⚙️',
+      description: '深入理解 Spring Boot 自动装配的核心机制，包括模块装配、条件装配和 SPI 机制。',
+      keyPoints: ['组件装配：手动装配 vs 自动装配', '模块装配：@Import 与四种导入方式', '条件装配：@Conditional 与 @Profile', 'SPI 机制：SpringFactoriesLoader'],
+      diagram: `
+	graph TB
+	    A[自动装配] --> B[模块装配]
+	    A --> C[条件装配]
+	    A --> D[SPI机制]
+	    B --> B1[@Import 导入普通类]
+	    B --> B2[@Import 导入配置类]
+	    B --> B3[@Import ImportSelector]
+	    B --> B4[@Import ImportBeanDefinitionRegistrar]
+	    C --> C1[@Conditional]
+	    C --> C2[@Profile]
+	    D --> D1[spring.factories]
+	    D --> D2[SpringFactoriesLoader]`
+    }
+  };
+
+  // 首页渲染
+  function renderHomePage() {
+    const main = document.getElementById('main-content');
+    const chaptersHtml = CONFIG.CHAPTERS
+      .filter(ch => ch.id === '01' || ch.id === '02')
+      .map(ch => {
+        const intro = CHAPTER_INTROS[ch.id];
+        return `
+          <div class="chapter-card" data-chapter="${ch.id}">
+            <div class="card-icon">${intro?.icon || '📚'}</div>
+            <div class="card-title">${ch.title}</div>
+            <div class="card-desc">${intro?.description || ''}</div>
+            <div class="card-meta">
+              <span class="difficulty-tag ${CONFIG.difficultyClass(ch.difficulty)}">${ch.difficulty}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+    main.innerHTML = `
+      <div class="hero-section">
+        <img src="assets/kuromi.svg" alt="Kuromi mascot" class="hero-kuromi" />
+        <h1>🧭 Spring Boot 源码学习指南</h1>
+        <p>通过源码深入理解 Spring Boot 的设计思想与实现原理</p>
+      </div>
+
+      <div class="progress-tracker">
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: 0%"></div>
+        </div>
+        <div class="progress-stats">
+          <span>开始你的学习之旅</span>
+          <span>0 / ${CONFIG.CHAPTERS.length} 章</span>
+        </div>
+      </div>
+
+      <h2 style="margin: 2rem 0 1rem;">📖 快速开始</h2>
+      <p style="color: var(--color-text-muted); margin-bottom: 1rem;">
+        选择下方章节开始学习，每章都配有详细的图解说明和代码示例。
+      </p>
+
+      <div class="chapter-cards">
+        ${chaptersHtml}
+      </div>
+
+      <h2 style="margin: 2rem 0 1rem;">🎯 学习目标</h2>
+      <div class="comparison-grid">
+        <div class="comparison-item">
+          <h4>理解核心机制</h4>
+          <p>深入理解 IOC 容器、自动装配、AOP 等核心机制的设计与实现</p>
+        </div>
+        <div class="comparison-item">
+          <h4>掌握关键流程</h4>
+          <p>掌握 Spring Boot 启动流程、容器刷新、组件加载的完整流程</p>
+        </div>
+        <div class="comparison-item">
+          <h4>提升架构能力</h4>
+          <p>通过源码学习，提升对复杂系统的架构设计和问题解决能力</p>
+        </div>
+      </div>
+    `;
+
+    // 绑定章节点击事件
+    main.querySelectorAll('.chapter-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const chapterId = card.dataset.chapter;
+        document.dispatchEvent(new CustomEvent('navigate', { detail: { id: chapterId } }));
+      });
+    });
+
+    // 渲染图表
+    setTimeout(() => LearningMode.enhanceContent(), 100);
+  }
+
+  // 章节内容页增强
+  function enhanceChapterContent(chapterId) {
+    const main = document.getElementById('main-content');
+    const intro = CHAPTER_INTROS[chapterId];
+
+    if (intro) {
+      // 在内容前添加知识卡片
+      const heroSection = document.createElement('div');
+      heroSection.className = 'hero-inline';
+      heroSection.innerHTML = `
+        <h2>${intro.icon} ${CONFIG.getChapter(chapterId)?.title || ''}</h2>
+        <p>${intro.description}</p>
+        <div style="margin-top: 1rem;">
+          <strong>本章重点：</strong>
+          <ul style="margin: 0.5rem 0 0 1.5rem; text-align: left;">
+            ${intro.keyPoints.map(p => `<li>${p}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+
+      const firstHeading = main.querySelector('h2, h3');
+      if (firstHeading) {
+        firstHeading.parentNode.insertBefore(heroSection, firstHeading);
+      }
+    }
+
+    // 渲染图表
+    setTimeout(() => LearningMode.enhanceContent(), 100);
+  }
+
+  // 覆盖原有导航逻辑
+  const originalNavigateTo = window.navigateTo;
+  window.navigateTo = async function(id, addToHistory = true) {
+    if (id === 'home') {
+      renderHomePage();
+      return;
+    }
+
+    // 调用原来的导航逻辑
+    await originalNavigateTo.call(this, id, addToHistory);
+
+    // 增强内容
+    if (id === '01' || id === '02') {
+      enhanceChapterContent(id);
+    }
+  };
+
+  // 初始化
+  document.addEventListener('DOMContentLoaded', () => {
+    LearningMode.init();
+
+    // 路由初始化后显示首页
+    setTimeout(() => {
+      if (!location.hash || location.hash === '#home') {
+        renderHomePage();
+      }
+    }, 100);
+  });
+</script>
+</body>
+</html>

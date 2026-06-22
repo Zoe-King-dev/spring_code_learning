@@ -1,0 +1,311 @@
+/* content.css — 渲染后的 Markdown 内容排版 (增强版) */
+
+.rendered-content {
+  font-family: var(--font-content);
+  font-size: var(--fs-base);
+  line-height: var(--lh-content);
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+/* -- 标题 -- */
+.rendered-content h1 { font-size: var(--fs-2xl); margin: var(--space-xl) 0 var(--space-md); line-height: var(--lh-heading); font-weight: 700; }
+.rendered-content h2 { font-size: var(--fs-xl); margin: var(--space-xl) 0 var(--space-sm); line-height: var(--lh-heading); font-weight: 700; padding-bottom: var(--space-xs); border-bottom: 1px solid var(--color-border); position: relative; }
+.rendered-content h3 { font-size: var(--fs-lg); margin: var(--space-lg) 0 var(--space-sm); line-height: var(--lh-heading); font-weight: 600; }
+.rendered-content h4 { font-size: var(--fs-base); margin: var(--space-md) 0 var(--space-xs); font-weight: 600; }
+
+/* 标题锚点 */
+.rendered-content .heading-anchor {
+  position: absolute;
+  left: -24px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: 400;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.rendered-content h2:hover .heading-anchor,
+.rendered-content h3:hover .heading-anchor {
+  opacity: 1;
+}
+
+.rendered-content .heading-anchor:hover {
+  color: var(--color-primary);
+}
+
+/* -- 段落 -- */
+.rendered-content p { margin: var(--space-sm) 0 var(--space-md); }
+
+/* -- 链接 -- */
+.rendered-content a { color: var(--color-link); text-decoration: underline; text-underline-offset: 2px; }
+.rendered-content a:hover { color: var(--color-primary); }
+
+/* -- 强调 -- */
+.rendered-content strong { font-weight: 600; color: var(--color-text); }
+.rendered-content em { font-style: italic; }
+
+/* -- 列表 -- */
+.rendered-content ul,
+.rendered-content ol { margin: var(--space-sm) 0 var(--space-md); padding-left: var(--space-xl); }
+.rendered-content li { margin: var(--space-xs) 0; }
+.rendered-content li > ul,
+.rendered-content li > ol { margin: var(--space-xs) 0; }
+
+/* -- 代码块 -- */
+.rendered-content pre {
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin: var(--space-md) 0;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  position: relative;
+}
+
+.rendered-content pre.code-with-copy {
+  padding-top: var(--space-xl);
+}
+
+.rendered-content pre code {
+  font-family: var(--font-mono);
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.rendered-content :not(pre) > code {
+  font-family: var(--font-mono);
+  background: var(--color-primary-dim);
+  color: var(--color-primary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+}
+
+/* 代码复制按钮 */
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 12px;
+  font-size: 12px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.rendered-content pre:hover .copy-btn {
+  opacity: 1;
+}
+
+.copy-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* -- 引用 -- */
+.rendered-content blockquote {
+  margin: var(--space-md) 0;
+  padding: var(--space-sm) var(--space-md);
+  border-left: 3px solid var(--color-primary);
+  background: var(--color-primary-dim);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--color-text);
+}
+
+.rendered-content blockquote p { margin: var(--space-xs) 0; }
+
+/* -- 表格 -- */
+.table-wrap {
+  overflow-x: auto;
+  margin: var(--space-md) 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.table-responsive {
+  overflow-x: auto;
+  margin: var(--space-md) 0;
+}
+
+.rendered-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+
+.rendered-content th {
+  background: var(--color-primary-dim);
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.rendered-content td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.rendered-content tr:last-child td {
+  border-bottom: none;
+}
+
+.rendered-content tr:hover td {
+  background: var(--color-bg);
+}
+
+/* -- 水平线 -- */
+.rendered-content hr {
+  margin: var(--space-xl) 0;
+  border: none;
+  border-top: 2px solid var(--color-border);
+}
+
+/* -- 图片 -- */
+.rendered-content img {
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  margin: var(--space-md) auto;
+  box-shadow: var(--shadow-sm);
+}
+
+/* -- 代码语言标签 -- */
+.code-lang-tag {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  font-size: .68rem;
+  color: rgba(255,255,255,.35);
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  pointer-events: none;
+}
+
+/* -- Mermaid 图表 -- */
+.mermaid {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.diagram-error {
+  padding: var(--space-md);
+  background: #ffebee;
+  color: #c62828;
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+}
+
+/* -- 内联图表容器 -- */
+.inline-diagram {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin: var(--space-lg) 0;
+  text-align: center;
+}
+
+.inline-diagram .diagram-title {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+  color: var(--color-text);
+}
+
+/* -- 对比网格 -- */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-md);
+  margin: var(--space-lg) 0;
+}
+
+.comparison-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.comparison-item h4 {
+  margin: 0 0 var(--space-sm) 0;
+  color: var(--color-primary);
+}
+
+.comparison-item p {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* -- 流程步骤 -- */
+.flow-steps {
+  margin: var(--space-lg) 0;
+}
+
+.flow-step {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.flow-step:last-child {
+  border-bottom: none;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-title {
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.step-desc {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* -- 键盘按键 -- */
+.rendered-content kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: 0.85em;
+  font-family: var(--font-mono);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 var(--color-border);
+}

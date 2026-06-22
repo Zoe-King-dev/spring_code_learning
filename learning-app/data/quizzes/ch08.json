@@ -1,0 +1,46 @@
+{
+  "chapterId": "08",
+  "title": "第8章 嵌入式 Web 容器",
+  "sections": [
+    {
+      "sectionAnchor": "81-嵌入式容器概述",
+      "questions": [
+        {
+          "id": "08-001",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring Boot 默认使用的嵌入式 Servlet 容器是？",
+          "options": [
+            { "id": "A", "text": "Jetty" },
+            { "id": "B", "text": "Undertow" },
+            { "id": "C", "text": "Tomcat" },
+            { "id": "D", "text": "Netty" }
+          ],
+          "correctAnswer": ["C"],
+          "explanation": "spring-boot-starter-web 默认引入 spring-boot-starter-tomcat。可通过 exclude tomcat 并引入 jetty/undertow starter 切换。Netty 是 WebFlux 默认。",
+          "referenceAnchor": "81-嵌入式容器概述"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "82-嵌入式容器启动",
+      "questions": [
+        {
+          "id": "08-002",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "ServletWebServerApplicationContext 在哪个阶段启动嵌入式 Tomcat？",
+          "options": [
+            { "id": "A", "text": "prepareBeanFactory 之后" },
+            { "id": "B", "text": "onRefresh 期间（refresh 第 11 步）" },
+            { "id": "C", "text": "finishRefresh 期间" },
+            { "id": "D", "text": "callRunners 之前" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "ServletWebServerApplicationContext 覆写 onRefresh()，在其中调用 createWebServer() 创建并启动 Tomcat。",
+          "referenceAnchor": "82-嵌入式容器启动"
+        }
+      ]
+    }
+  ]
+}

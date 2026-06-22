@@ -1,0 +1,23 @@
+flowchart TD
+    Start([SpringApplication.run]) --> S1[1. 创建 StopWatch<br/>计时启动耗时]
+    S1 --> S2[2. 获取 SpringApplicationRunListeners<br/>发布 ApplicationStartingEvent]
+    S2 --> S3[3. prepareEnvironment<br/>准备 ConfigurableEnvironment]
+    S3 --> S4[4. printBanner<br/>打印 Banner]
+    S4 --> S5[5. createApplicationContext<br/>根据 WebApplicationType 创建]
+    S5 --> S6[6. prepareContext<br/>注册 BeanDefinition / 应用 Initializer]
+    S6 --> S7[7. refreshContext<br/>调用 AbstractApplicationContext.refresh]
+    S7 --> S8[8. afterRefresh<br/>预留扩展点]
+    S8 --> S9[9. 发布 ApplicationStartedEvent<br/>停止 StopWatch]
+    S9 --> S10[10. callRunners<br/>执行 ApplicationRunner / CommandLineRunner]
+    S10 --> S11[11. 发布 ApplicationReadyEvent]
+    S11 --> End([返回 ConfigurableApplicationContext])
+
+    S7 -.异常.-> Fail[handleRunFailure<br/>发布 ApplicationFailedEvent]
+    Fail --> Err([抛出异常])
+
+    classDef startNode fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef refreshNode fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef failNode fill:#ffebee,stroke:#c62828
+    class Start,End startNode
+    class S7 refreshNode
+    class Fail,Err failNode

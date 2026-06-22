@@ -1,0 +1,68 @@
+{
+  "chapterId": "part3",
+  "title": "第 3 部分综合测验 · 整合常用开发场景",
+  "description": "涵盖 Ch10-Ch13：JDBC、MyBatis、WebMvc、WebFlux",
+  "sections": [
+    {
+      "sectionAnchor": "part3",
+      "questions": [
+        {
+          "id": "p3-001",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring Boot 启用 JDBC 自动装配的核心 @Conditional 注解是？",
+          "options": [
+            { "id": "A", "text": "@ConditionalOnProperty" },
+            { "id": "B", "text": "@ConditionalOnClass(DataSource.class)" },
+            { "id": "C", "text": "@ConditionalOnMissingBean" },
+            { "id": "D", "text": "@ConditionalOnWebApplication" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "DataSourceAutoConfiguration 使用 @ConditionalOnClass({ DataSource.class, EmbeddedDatabaseType.class }) 触发装配。"
+        },
+        {
+          "id": "p3-002",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "MyBatis Mapper 接口的代理对象由哪个工厂 Bean 产生？",
+          "options": [
+            { "id": "A", "text": "SqlSessionFactoryBean" },
+            { "id": "B", "text": "MapperFactoryBean" },
+            { "id": "C", "text": "MapperScannerConfigurer" },
+            { "id": "D", "text": "SqlSessionTemplate" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "@MapperScan 扫描到的 Mapper 接口最终都被注册为 MapperFactoryBean，由它调用 SqlSession.getMapper() 产生代理对象。"
+        },
+        {
+          "id": "p3-003",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列哪些是 DispatcherServlet 处理请求的核心组件？（多选）",
+          "options": [
+            { "id": "A", "text": "HandlerMapping" },
+            { "id": "B", "text": "HandlerAdapter" },
+            { "id": "C", "text": "ViewResolver" },
+            { "id": "D", "text": "HandlerExceptionResolver" }
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "DispatcherServlet 的九大组件均围绕请求处理流程：映射、适配、视图、异常、本地化、文件上传、Flash 属性等。"
+        },
+        {
+          "id": "p3-004",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "WebFlux 路由的函数式编程入口是？",
+          "options": [
+            { "id": "A", "text": "RouterFunctions.route() / RouterFunction" },
+            { "id": "B", "text": "@RequestMapping" },
+            { "id": "C", "text": "DispatcherServlet" },
+            { "id": "D", "text": "Filter" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "WebFlux 提供两种编程模型：注解式（与 MVC 相似）和函数式（RouterFunction + HandlerFunction）。"
+        }
+      ]
+    }
+  ]
+}

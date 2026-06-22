@@ -1,0 +1,61 @@
+{
+  "chapterId": "03",
+  "title": "第3章 Spring Boot 的 IOC 容器",
+  "sections": [
+    {
+      "sectionAnchor": "31-ioc-容器概述",
+      "questions": [
+        {
+          "id": "03-001",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring IOC 容器的根接口是？",
+          "options": [
+            { "id": "A", "text": "ApplicationContext" },
+            { "id": "B", "text": "BeanFactory" },
+            { "id": "C", "text": "BeanDefinition" },
+            { "id": "D", "text": "BeanPostProcessor" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "BeanFactory 是 Spring IOC 容器的根接口，定义了 getBean / containsBean / isSingleton 等核心方法。ApplicationContext 是其子接口，提供更多企业级功能。",
+          "referenceAnchor": "31-ioc-容器概述"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "32-bean-的生命周期",
+      "questions": [
+        {
+          "id": "03-002",
+          "type": "multiple",
+          "difficulty": "hard",
+          "question": "下列哪些是 Bean 实例化后、初始化前的阶段？（多选）",
+          "options": [
+            { "id": "A", "text": "属性填充（populateBean）" },
+            { "id": "B", "text": "Aware 接口回调" },
+            { "id": "C", "text": "BeanPostProcessor#postProcessBeforeInitialization" },
+            { "id": "D", "text": "@PostConstruct 方法执行" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "Bean 生命周期顺序：实例化 → 属性填充 → Aware 回调 → BPP.postProcessBeforeInitialization → 初始化方法（@PostConstruct/InitializingBean/init-method）→ BPP.postProcessAfterInitialization。@PostConstruct 已属于初始化阶段。",
+          "referenceAnchor": "32-bean-的生命周期"
+        },
+        {
+          "id": "03-003",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring 解决循环依赖使用的关键机制是？",
+          "options": [
+            { "id": "A", "text": "双重检查锁（DCL）" },
+            { "id": "B", "text": "三级缓存（三层 Map）" },
+            { "id": "C", "text": "线程局部变量（ThreadLocal）" },
+            { "id": "D", "text": "信号量（Semaphore）" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring 通过三级缓存解决单例 Bean 的循环依赖：一级缓存 singletonObjects（成品）、二级缓存 earlySingletonObjects（半成品）、三级缓存 singletonFactories（工厂）。",
+          "referenceAnchor": "32-bean-的生命周期"
+        }
+      ]
+    }
+  ]
+}

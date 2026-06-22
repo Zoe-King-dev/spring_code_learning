@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant App as SpringApplication
+    participant Selector as AutoConfigurationImportSelector
+    participant Loader as SpringFactoriesLoader
+    participant Meta as META-INF/spring.factories
+    participant Cond as ConditionEvaluator
+    participant Ctx as ApplicationContext
+
+    App->>Selector: selectImports(AnnotationMetadata)
+    Selector->>Loader: loadFactoryNames(EnableAutoConfiguration)
+    Loader->>Meta: 读取所有 jar 中的 spring.factories
+    Meta-->>Loader: 返回所有 AutoConfiguration 类名
+    Loader-->>Selector: List<String>
+
+    loop 每个候选 AutoConfiguration
+        Selector->>Cond: shouldSkip(metadata)
+        Cond-->>Selector: @ConditionalOnClass<br/>@ConditionalOnMissingBean<br/>@ConditionalOnProperty
+    end
+
+    Selector-->>App: 通过条件的 Configuration 类名数组
+    App->>Ctx: 注册并实例化 Configuration
+    Note over App,Ctx: 最终只装配符合条件的自动配置类

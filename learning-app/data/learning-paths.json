@@ -1,0 +1,40 @@
+{
+  "paths": [
+    {
+      "id": "standard",
+      "icon": "📖",
+      "name": "标准路线",
+      "description": "顺序通读全书 14 章，建立完整知识体系。",
+      "audience": "系统学习者",
+      "estimatedDays": 14,
+      "chapters": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"]
+    },
+    {
+      "id": "quickstart",
+      "icon": "⚡",
+      "name": "快速入门",
+      "description": "聚焦自动装配、IOC 容器与 refresh 流程，5 天完成核心入门。",
+      "audience": "时间有限但想理解核心",
+      "estimatedDays": 5,
+      "chapters": ["01", "02", "03", "07", "14"]
+    },
+    {
+      "id": "interview",
+      "icon": "🎯",
+      "name": "面试突击",
+      "description": "覆盖高频面试点：自动装配、Bean 生命周期、SpringApplication、AOP、refresh 13 步。",
+      "audience": "面试准备者",
+      "estimatedDays": 5,
+      "chapters": ["02", "03", "04", "05", "07"]
+    },
+    {
+      "id": "integration",
+      "icon": "🔌",
+      "name": "整合路线",
+      "description": "项目驱动学习：从快速入门到 JDBC/MyBatis/MVC/Flux 整合。",
+      "audience": "实际项目开发",
+      "estimatedDays": 5,
+      "chapters": ["01", "10", "11", "12", "13"]
+    }
+  ]
+}

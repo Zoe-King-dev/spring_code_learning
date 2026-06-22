@@ -1,0 +1,96 @@
+{
+  "chapterId": "part1",
+  "title": "第 1 部分综合测验 · 底层依赖的核心容器",
+  "description": "涵盖 Ch01-Ch05：Spring Boot 概述、自动装配、IOC 容器、SpringApplication、AOP 支持",
+  "sections": [
+    {
+      "sectionAnchor": "part1",
+      "questions": [
+        {
+          "id": "p1-001",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring Boot 的两大核心机制是？",
+          "options": [
+            { "id": "A", "text": "IOC + AOP" },
+            { "id": "B", "text": "自动装配 + 约定大于配置" },
+            { "id": "C", "text": "依赖注入 + 切面编程" },
+            { "id": "D", "text": "模板模式 + 反射" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring Boot 在 Spring Framework 之上引入自动装配（Auto Configuration）和约定大于配置（Convention over Configuration）两大核心思想。"
+        },
+        {
+          "id": "p1-002",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "@SpringBootApplication 等价于下列哪一组组合注解？",
+          "options": [
+            { "id": "A", "text": "@Component + @Service + @Repository" },
+            { "id": "B", "text": "@SpringBootConfiguration + @EnableAutoConfiguration + @ComponentScan" },
+            { "id": "C", "text": "@Configuration + @Import + @Conditional" },
+            { "id": "D", "text": "@EnableAutoConfiguration + @ComponentScan" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "@SpringBootApplication 是组合注解。"
+        },
+        {
+          "id": "p1-003",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列哪些是 BeanPostProcessor 的扩展时机？（多选）",
+          "options": [
+            { "id": "A", "text": "Bean 实例化前" },
+            { "id": "B", "text": "Bean 属性填充后、初始化方法之前" },
+            { "id": "C", "text": "Bean 初始化方法之后" },
+            { "id": "D", "text": "Bean 销毁时" }
+          ],
+          "correctAnswer": ["B", "C"],
+          "explanation": "BeanPostProcessor 仅提供 postProcessBeforeInitialization 与 postProcessAfterInitialization。实例化前/销毁分别由 InstantiationAwareBeanPostProcessor 与 DestructionAwareBeanPostProcessor 提供。"
+        },
+        {
+          "id": "p1-004",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "SpringApplication.run() 中真正调用 AbstractApplicationContext.refresh() 的步骤是？",
+          "options": [
+            { "id": "A", "text": "prepareEnvironment" },
+            { "id": "B", "text": "prepareContext" },
+            { "id": "C", "text": "refreshContext" },
+            { "id": "D", "text": "callRunners" }
+          ],
+          "correctAnswer": ["C"],
+          "explanation": "refreshContext 内部调用 AbstractApplicationContext.refresh()，这是 IOC 容器初始化的最终入口。"
+        },
+        {
+          "id": "p1-005",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "ImportSelector 与 ImportBeanDefinitionRegistrar 的本质区别是？",
+          "options": [
+            { "id": "A", "text": "前者只能导入一个类，后者可以导入多个" },
+            { "id": "B", "text": "前者返回类名数组让 Spring 处理，后者直接操作 BeanDefinitionRegistry 注册" },
+            { "id": "C", "text": "前者运行在启动期，后者运行在 refresh 阶段" },
+            { "id": "D", "text": "二者完全等价，仅命名不同" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "ImportSelector.selectImports 返回 String[] 类名，由 Spring 自动按 @Configuration 流程处理；ImportBeanDefinitionRegistrar 拿到 Registry 后由开发者自己创建 BeanDefinition 并注册，控制粒度更细。"
+        },
+        {
+          "id": "p1-006",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "AOP 中，proxyTargetClass=true 的作用是？",
+          "options": [
+            { "id": "A", "text": "禁用 AOP" },
+            { "id": "B", "text": "强制使用 CGLIB 子类代理，即使目标类实现了接口" },
+            { "id": "C", "text": "强制使用 JDK 动态代理" },
+            { "id": "D", "text": "把 Bean 注册为原型作用域" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "proxyTargetClass=true 让 ProxyFactory 始终选择 CGLIB，确保即使目标类实现接口也代理类本身（保留类型信息便于自注入）。"
+        }
+      ]
+    }
+  ]
+}

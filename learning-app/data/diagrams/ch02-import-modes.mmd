@@ -1,0 +1,19 @@
+graph LR
+    Start["@Import(X.class)"] --> Check{X 的类型？}
+
+    Check -->|"普通类<br/>(无 @Configuration)"| M1[直接作为 Bean 注册]
+    Check -->|"@Configuration 类"| M2[作为配置源解析<br/>处理 @Bean 方法]
+    Check -->|"实现 ImportSelector"| M3[调用 selectImports<br/>返回需要导入的类名数组]
+    Check -->|"实现 ImportBeanDefinitionRegistrar"| M4[调用 registerBeanDefinitions<br/>手动注册 BeanDefinition]
+
+    M1 --> Container[(IOC 容器)]
+    M2 --> Container
+    M3 --> Container
+    M4 --> Container
+
+    classDef startNode fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef branchNode fill:#fff3e0,stroke:#ef6c00
+    classDef containerNode fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    class Start startNode
+    class M1,M2,M3,M4 branchNode
+    class Container containerNode

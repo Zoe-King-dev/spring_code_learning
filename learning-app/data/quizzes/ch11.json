@@ -1,0 +1,46 @@
+{
+  "chapterId": "11",
+  "title": "第11章 Spring Boot 整合 MyBatis",
+  "sections": [
+    {
+      "sectionAnchor": "111-mybatis-starter",
+      "questions": [
+        {
+          "id": "11-001",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "MyBatis Spring Boot Starter 中，Mapper 接口被注册为 Bean 的核心机制是？",
+          "options": [
+            { "id": "A", "text": "@Component 直接扫描" },
+            { "id": "B", "text": "MapperScannerConfigurer / @MapperScan 通过 ImportBeanDefinitionRegistrar 注册 MapperFactoryBean" },
+            { "id": "C", "text": "动态代理在运行时按需创建" },
+            { "id": "D", "text": "反射调用 SqlSession.getMapper() 手动注入" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "@MapperScan 触发 MapperScannerRegistrar（ImportBeanDefinitionRegistrar），扫描后为每个 Mapper 接口注册 MapperFactoryBean，由它通过 SqlSession.getMapper() 生成动态代理。",
+          "referenceAnchor": "111-mybatis-starter"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "112-sqlsession",
+      "questions": [
+        {
+          "id": "11-002",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "在 Spring 集成下，每次方法调用拿到的 SqlSession 实际上是？",
+          "options": [
+            { "id": "A", "text": "全新的非共享实例" },
+            { "id": "B", "text": "SqlSessionTemplate（线程安全的代理，复用同事务内的同一 Session）" },
+            { "id": "C", "text": "DefaultSqlSession 的全局单例" },
+            { "id": "D", "text": "ThreadLocal 中的随机实例" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring 集成下注入的是 SqlSessionTemplate，它是线程安全的代理；通过 SqlSessionInterceptor 在同一事务内复用同一个底层 SqlSession，自动处理提交/回滚。",
+          "referenceAnchor": "112-sqlsession"
+        }
+      ]
+    }
+  ]
+}

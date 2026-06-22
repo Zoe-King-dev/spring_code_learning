@@ -1,0 +1,52 @@
+classDiagram
+    class BeanFactory {
+        <<interface>>
+        +getBean(name) Object
+        +containsBean(name) boolean
+        +isSingleton(name) boolean
+        +getType(name) Class
+    }
+
+    class ListableBeanFactory {
+        <<interface>>
+        +getBeanDefinitionNames() String[]
+        +getBeansOfType(type) Map
+    }
+
+    class HierarchicalBeanFactory {
+        <<interface>>
+        +getParentBeanFactory() BeanFactory
+    }
+
+    class ApplicationContext {
+        <<interface>>
+        +getId() String
+        +getApplicationName() String
+        +publishEvent(event) void
+    }
+
+    class ConfigurableApplicationContext {
+        <<interface>>
+        +refresh() void
+        +close() void
+        +getBeanFactory() ConfigurableListableBeanFactory
+    }
+
+    class AbstractApplicationContext {
+        +refresh() void
+        +obtainFreshBeanFactory() BeanFactory
+        +invokeBeanFactoryPostProcessors() void
+    }
+
+    class AnnotationConfigApplicationContext {
+        +register(annotatedClasses)
+        +scan(basePackages)
+    }
+
+    BeanFactory <|-- ListableBeanFactory
+    BeanFactory <|-- HierarchicalBeanFactory
+    ListableBeanFactory <|-- ApplicationContext
+    HierarchicalBeanFactory <|-- ApplicationContext
+    ApplicationContext <|-- ConfigurableApplicationContext
+    ConfigurableApplicationContext <|.. AbstractApplicationContext
+    AbstractApplicationContext <|-- AnnotationConfigApplicationContext

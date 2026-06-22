@@ -1,0 +1,82 @@
+{
+  "chapterId": "part2",
+  "title": "第 2 部分综合测验 · 生命周期原理分析",
+  "description": "涵盖 Ch06-Ch09：准备容器与环境、IOC 容器刷新、嵌入式 Web 容器、AOP 模块生命周期",
+  "sections": [
+    {
+      "sectionAnchor": "part2",
+      "questions": [
+        {
+          "id": "p2-001",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "ConfigurationClassPostProcessor 在 refresh 的哪个步骤被调用？",
+          "options": [
+            { "id": "A", "text": "prepareRefresh" },
+            { "id": "B", "text": "invokeBeanFactoryPostProcessors" },
+            { "id": "C", "text": "registerBeanPostProcessors" },
+            { "id": "D", "text": "finishBeanFactoryInitialization" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "它是 BeanDefinitionRegistryPostProcessor，在 invokeBeanFactoryPostProcessors 阶段被调用，负责解析 @Configuration / @Import / @ComponentScan 并注册 BeanDefinition。"
+        },
+        {
+          "id": "p2-002",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "ServletWebServerApplicationContext 覆写哪个方法以启动 Tomcat？",
+          "options": [
+            { "id": "A", "text": "prepareBeanFactory" },
+            { "id": "B", "text": "onRefresh" },
+            { "id": "C", "text": "finishRefresh" },
+            { "id": "D", "text": "postProcessBeanFactory" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "onRefresh 是 refresh 第 11 步的扩展点。ServletWebServerApplicationContext.onRefresh 调用 createWebServer 创建并启动嵌入式容器。"
+        },
+        {
+          "id": "p2-003",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列哪些事件会在 SpringApplication 启动流程中按顺序发布？（多选）",
+          "options": [
+            { "id": "A", "text": "ApplicationStartingEvent" },
+            { "id": "B", "text": "ApplicationEnvironmentPreparedEvent" },
+            { "id": "C", "text": "ApplicationStartedEvent" },
+            { "id": "D", "text": "ApplicationReadyEvent" }
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "完整顺序：Starting → EnvironmentPrepared → ContextPrepared → ContextLoaded → Started → Ready（失败时发布 Failed）。"
+        },
+        {
+          "id": "p2-004",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "Spring 解决单例 Bean 循环依赖的关键缓存层级是？",
+          "options": [
+            { "id": "A", "text": "一级缓存 singletonObjects" },
+            { "id": "B", "text": "二级缓存 earlySingletonObjects" },
+            { "id": "C", "text": "三级缓存 singletonFactories" },
+            { "id": "D", "text": "以上三级缓存协同工作" }
+          ],
+          "correctAnswer": ["D"],
+          "explanation": "三级缓存协同：singletonFactories 提前暴露工厂；earlySingletonObjects 缓存半成品（含 AOP 早期代理）；singletonObjects 存放完整实例。"
+        },
+        {
+          "id": "p2-005",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "AOP Advice 的"环绕"逻辑由谁实际驱动？",
+          "options": [
+            { "id": "A", "text": "ReflectiveMethodInvocation.proceed()" },
+            { "id": "B", "text": "BeanPostProcessor 直接调用" },
+            { "id": "C", "text": "Tomcat 的请求线程池" },
+            { "id": "D", "text": "ThreadLocal 拦截器" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "代理对象方法被调用时，进入 ReflectiveMethodInvocation.proceed()，按拦截器链顺序逐个执行 Advisor 的 MethodInterceptor。"
+        }
+      ]
+    }
+  ]
+}

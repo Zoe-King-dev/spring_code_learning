@@ -1,0 +1,62 @@
+{
+  "chapterId": "07",
+  "title": "第7章 IOC 容器的刷新",
+  "sections": [
+    {
+      "sectionAnchor": "71-refresh-的-13-个步骤",
+      "questions": [
+        {
+          "id": "07-001",
+          "type": "single",
+          "difficulty": "hard",
+          "question": "AbstractApplicationContext.refresh() 中，invokeBeanFactoryPostProcessors 的主要职责是？",
+          "options": [
+            { "id": "A", "text": "实例化所有单例 Bean" },
+            { "id": "B", "text": "调用 BeanFactoryPostProcessor（含 BeanDefinitionRegistryPostProcessor），允许修改/注册 BeanDefinition" },
+            { "id": "C", "text": "启动嵌入式 Web 容器" },
+            { "id": "D", "text": "注册 BeanPostProcessor" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "invokeBeanFactoryPostProcessors 调用所有 BFPP，特别是 ConfigurationClassPostProcessor 在此阶段解析 @Configuration / @ComponentScan / @Import，把它们转为 BeanDefinition 注册进 BeanFactory。",
+          "referenceAnchor": "71-refresh-的-13-个步骤"
+        },
+        {
+          "id": "07-002",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "下列方法在 refresh() 中负责完成所有非懒加载单例 Bean 的实例化？",
+          "options": [
+            { "id": "A", "text": "prepareBeanFactory" },
+            { "id": "B", "text": "registerBeanPostProcessors" },
+            { "id": "C", "text": "finishBeanFactoryInitialization" },
+            { "id": "D", "text": "finishRefresh" }
+          ],
+          "correctAnswer": ["C"],
+          "explanation": "finishBeanFactoryInitialization 调用 beanFactory.preInstantiateSingletons()，实例化所有非懒加载的单例 Bean。finishRefresh 主要负责发布 ContextRefreshedEvent。",
+          "referenceAnchor": "71-refresh-的-13-个步骤"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "72-refresh-代码精读",
+      "questions": [
+        {
+          "id": "07-fill-001",
+          "type": "fill-blank",
+          "difficulty": "hard",
+          "question": "补全 AbstractApplicationContext.refresh() 的前几个关键步骤",
+          "lang": "java",
+          "code": "@Override\npublic void refresh() throws BeansException, IllegalStateException {\n    synchronized (this.startupShutdownMonitor) {\n        // 1. 准备刷新\n        ___1___();\n        // 2. 获取 BeanFactory（子类实现）\n        ConfigurableListableBeanFactory beanFactory = ___2___();\n        // 3. 准备 BeanFactory（注册 ClassLoader、Aware、Environment 等）\n        ___3___(beanFactory);\n        // 4. 子类扩展点\n        postProcessBeanFactory(beanFactory);\n        // 5. 执行所有 BeanFactoryPostProcessor\n        invokeBeanFactoryPostProcessors(beanFactory);\n        // ...\n    }\n}",
+          "blanks": [
+            { "id": "1", "answer": "prepareRefresh", "hint": "准备阶段的方法名" },
+            { "id": "2", "answer": "obtainFreshBeanFactory", "hint": "获取最新 BeanFactory" },
+            { "id": "3", "answer": "prepareBeanFactory", "hint": "准备 BeanFactory 配置" }
+          ],
+          "caseSensitive": false,
+          "explanation": "refresh() 13 步中前 5 步分别是：prepareRefresh / obtainFreshBeanFactory / prepareBeanFactory / postProcessBeanFactory / invokeBeanFactoryPostProcessors。",
+          "referenceAnchor": "72-refresh-代码精读"
+        }
+      ]
+    }
+  ]
+}

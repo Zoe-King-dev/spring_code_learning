@@ -1,0 +1,81 @@
+{
+  "chapterId": "02",
+  "title": "第2章 Spring Boot 的自动装配",
+  "sections": [
+    {
+      "sectionAnchor": "23-模块装配",
+      "questions": [
+        {
+          "id": "02-001",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "Spring 模块装配的核心注解是？",
+          "options": [
+            { "id": "A", "text": "@Component" },
+            { "id": "B", "text": "@Import" },
+            { "id": "C", "text": "@Service" },
+            { "id": "D", "text": "@Bean" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "@Import 是模块装配的核心，可以导入普通类、配置类、ImportSelector、ImportBeanDefinitionRegistrar 等四种类型。",
+          "referenceAnchor": "23-模块装配"
+        },
+        {
+          "id": "02-002",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "@Import 支持下列哪几种导入方式？（多选）",
+          "options": [
+            { "id": "A", "text": "导入普通类" },
+            { "id": "B", "text": "导入 @Configuration 配置类" },
+            { "id": "C", "text": "导入 ImportSelector 实现" },
+            { "id": "D", "text": "导入 ImportBeanDefinitionRegistrar 实现" }
+          ],
+          "correctAnswer": ["A", "B", "C", "D"],
+          "explanation": "@Import 支持全部四种导入方式：① 普通类直接注册为 Bean；② @Configuration 类作为配置源；③ ImportSelector 动态返回类名数组；④ ImportBeanDefinitionRegistrar 手动注册 BeanDefinition。",
+          "referenceAnchor": "232-快速体会模块装配"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "24-条件装配",
+      "questions": [
+        {
+          "id": "02-003",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "下列哪个注解用于控制自动配置类仅在某个类位于 classpath 时才生效？",
+          "options": [
+            { "id": "A", "text": "@Bean" },
+            { "id": "B", "text": "@ConditionalOnClass" },
+            { "id": "C", "text": "@Autowired" },
+            { "id": "D", "text": "@Value" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "@ConditionalOnClass 是 Spring Boot 的条件装配注解，当指定类在 classpath 中存在时才会加载对应的自动配置类。",
+          "referenceAnchor": "24-条件装配"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "25-spi机制",
+      "questions": [
+        {
+          "id": "02-004",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "Spring Boot 自动装配依赖于哪个 SPI 机制？",
+          "options": [
+            { "id": "A", "text": "Java SPI（ServiceLoader）" },
+            { "id": "B", "text": "Spring Factories（SpringFactoriesLoader）" },
+            { "id": "C", "text": "OSGi 机制" },
+            { "id": "D", "text": "Dubbo SPI" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "Spring Boot 使用自己的 SPI 机制 SpringFactoriesLoader，从 META-INF/spring.factories 读取需要加载的自动配置类。",
+          "referenceAnchor": "25-spi机制"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "achievements": [
+    {
+      "id": "first-step",
+      "name": "初窥门径",
+      "badge": "🥉",
+      "condition": "完成第 1 章阅读",
+      "rule": { "type": "chapter-read", "chapter": "01" }
+    },
+    {
+      "id": "autowire-master",
+      "name": "装配大师",
+      "badge": "🔧",
+      "condition": "第 2 章测验正确率 ≥ 80%",
+      "rule": { "type": "quiz-accuracy", "chapter": "02", "minAccuracy": 0.8, "minAnswered": 2 }
+    },
+    {
+      "id": "container-explorer",
+      "name": "容器探索者",
+      "badge": "🏺",
+      "condition": "完成第 3 章 + 第 7 章",
+      "rule": { "type": "chapters-read", "chapters": ["03", "07"] }
+    },
+    {
+      "id": "aspect-oriented",
+      "name": "面向切面",
+      "badge": "⚔️",
+      "condition": "完成第 5 章 + 第 9 章",
+      "rule": { "type": "chapters-read", "chapters": ["05", "09"] }
+    },
+    {
+      "id": "source-hunter",
+      "name": "源码猎人",
+      "badge": "🏆",
+      "condition": "完成全部 14 章阅读",
+      "rule": { "type": "all-chapters-read" }
+    },
+    {
+      "id": "perfect-score",
+      "name": "满分学霸",
+      "badge": "💯",
+      "condition": "任意章节测验 100% 正确",
+      "rule": { "type": "any-perfect-chapter", "minAnswered": 2 }
+    },
+    {
+      "id": "streak-7",
+      "name": "连续学习",
+      "badge": "🔥",
+      "condition": "连续 7 天打开学习",
+      "rule": { "type": "login-streak", "days": 7 }
+    }
+  ]
+}

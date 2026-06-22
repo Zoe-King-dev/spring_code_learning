@@ -1,0 +1,54 @@
+{
+  "chapterId": "part4",
+  "title": "第 4 部分综合测验 · 运行 Spring Boot 应用",
+  "description": "涵盖 Ch14：打包部署、可执行 jar、优雅停机",
+  "sections": [
+    {
+      "sectionAnchor": "part4",
+      "questions": [
+        {
+          "id": "p4-001",
+          "type": "single",
+          "difficulty": "easy",
+          "question": "spring-boot-maven-plugin 的 repackage 目标作用是？",
+          "options": [
+            { "id": "A", "text": "把项目打包为可执行 fat jar（含 BOOT-INF 结构）" },
+            { "id": "B", "text": "执行单元测试" },
+            { "id": "C", "text": "生成 docker 镜像" },
+            { "id": "D", "text": "上传 jar 到 Maven 中央仓库" }
+          ],
+          "correctAnswer": ["A"],
+          "explanation": "repackage 把 Maven 打出的普通 jar 改造为 Spring Boot 可执行 jar：添加 spring-boot-loader、组织 BOOT-INF/{classes,lib}、写入 Manifest 的 Main-Class。"
+        },
+        {
+          "id": "p4-002",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "优雅停机开启后，进行中请求被允许完成的最长时间由哪个配置控制？",
+          "options": [
+            { "id": "A", "text": "server.shutdown" },
+            { "id": "B", "text": "spring.lifecycle.timeout-per-shutdown-phase" },
+            { "id": "C", "text": "management.endpoint.shutdown.timeout" },
+            { "id": "D", "text": "server.tomcat.connection-timeout" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "spring.lifecycle.timeout-per-shutdown-phase 默认 30 秒，超时后强制停止。"
+        },
+        {
+          "id": "p4-003",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "下列哪些方式可以触发 Spring Boot 应用关闭？（多选）",
+          "options": [
+            { "id": "A", "text": "进程收到 SIGTERM" },
+            { "id": "B", "text": "调用 ConfigurableApplicationContext.close()" },
+            { "id": "C", "text": "通过 Actuator /actuator/shutdown 端点（需启用）" },
+            { "id": "D", "text": "调用 System.gc()" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "SIGTERM 由 ShutdownHook 接管，context.close() 是程序式关闭，Actuator shutdown 端点是 HTTP 触发。System.gc() 与关闭无关。"
+        }
+      ]
+    }
+  ]
+}

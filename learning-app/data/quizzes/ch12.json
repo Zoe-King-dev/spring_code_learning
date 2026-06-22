@@ -1,0 +1,46 @@
+{
+  "chapterId": "12",
+  "title": "第12章 Spring Boot 整合 WebMvc",
+  "sections": [
+    {
+      "sectionAnchor": "121-dispatcherservlet",
+      "questions": [
+        {
+          "id": "12-001",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "DispatcherServlet 处理请求时，决定调用哪个 Controller 方法的核心组件是？",
+          "options": [
+            { "id": "A", "text": "HandlerAdapter" },
+            { "id": "B", "text": "HandlerMapping" },
+            { "id": "C", "text": "ViewResolver" },
+            { "id": "D", "text": "HandlerExceptionResolver" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "HandlerMapping（如 RequestMappingHandlerMapping）负责根据请求路径/方法找到匹配的 HandlerMethod。HandlerAdapter 负责真正调用 Handler。",
+          "referenceAnchor": "121-dispatcherservlet"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "122-webmvc-autoconfig",
+      "questions": [
+        {
+          "id": "12-002",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "WebMvcAutoConfiguration 默认提供下列哪些组件？（多选）",
+          "options": [
+            { "id": "A", "text": "RequestMappingHandlerMapping" },
+            { "id": "B", "text": "默认的静态资源映射（/static/**, /public/**）" },
+            { "id": "C", "text": "Jackson 的 HttpMessageConverter" },
+            { "id": "D", "text": "SQL 连接池" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "WebMvcAutoConfiguration 装配 MVC 基础设施：HandlerMapping/Adapter、消息转换器、静态资源映射、视图解析器等。SQL 连接池属于 JDBC 自动装配。",
+          "referenceAnchor": "122-webmvc-autoconfig"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "chapterId": "06",
+  "title": "第6章 准备容器与环境",
+  "sections": [
+    {
+      "sectionAnchor": "61-prepareenvironment",
+      "questions": [
+        {
+          "id": "06-001",
+          "type": "single",
+          "difficulty": "medium",
+          "question": "SpringApplication 在 prepareEnvironment 阶段会创建以下哪种类型的 Environment 实例（默认 Servlet Web 应用）？",
+          "options": [
+            { "id": "A", "text": "StandardEnvironment" },
+            { "id": "B", "text": "StandardServletEnvironment" },
+            { "id": "C", "text": "StandardReactiveWebEnvironment" },
+            { "id": "D", "text": "MockEnvironment" }
+          ],
+          "correctAnswer": ["B"],
+          "explanation": "SpringApplication.getOrCreateEnvironment() 根据 WebApplicationType 创建：SERVLET → StandardServletEnvironment、REACTIVE → StandardReactiveWebEnvironment、NONE → StandardEnvironment。",
+          "referenceAnchor": "61-prepareenvironment"
+        }
+      ]
+    },
+    {
+      "sectionAnchor": "62-preparecontext",
+      "questions": [
+        {
+          "id": "06-002",
+          "type": "multiple",
+          "difficulty": "medium",
+          "question": "prepareContext 阶段会执行下列哪些工作？（多选）",
+          "options": [
+            { "id": "A", "text": "为 ApplicationContext 设置 Environment" },
+            { "id": "B", "text": "调用所有 ApplicationContextInitializer.initialize" },
+            { "id": "C", "text": "把主类作为 source 注册为 BeanDefinition" },
+            { "id": "D", "text": "刷新 IOC 容器（调用 refresh）" }
+          ],
+          "correctAnswer": ["A", "B", "C"],
+          "explanation": "prepareContext 负责为 refresh 做准备：设置 Environment、应用 Initializer、加载主 source。refresh 是下一步 refreshContext 才会调用。",
+          "referenceAnchor": "62-preparecontext"
+        }
+      ]
+    }
+  ]
+}
