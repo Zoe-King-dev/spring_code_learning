@@ -67,6 +67,55 @@
     { "source": "web-flux", "target": "reactor", "relation": "depends_on" },
 
     { "source": "fat-jar", "target": "spring-boot", "relation": "depends_on" },
-    { "source": "graceful-shutdown", "target": "web-server", "relation": "depends_on" }
+    { "source": "graceful-shutdown", "target": "web-server", "relation": "depends_on" },
+
+    { "source": "bean-wrapper", "target": "type-conversion", "relation": "contains" },
+    { "source": "bean-wrapper", "target": "bean-lifecycle", "relation": "depends_on" },
+    { "source": "factory-bean", "target": "bean-definition", "relation": "depends_on" },
+    { "source": "resource-loader", "target": "application-context", "relation": "depends_on" },
+    { "source": "type-conversion", "target": "bean-wrapper", "relation": "depends_on" },
+
+    { "source": "advisor", "target": "pointcut", "relation": "contains" },
+    { "source": "advisor", "target": "advice", "relation": "contains" },
+    { "source": "pointcut", "target": "joinpoint", "relation": "depends_on" },
+    { "source": "proxy-factory", "target": "aop-proxy", "relation": "contains" },
+    { "source": "aop-proxy", "target": "jdk-proxy", "relation": "implements" },
+    { "source": "aop-proxy", "target": "cglib-proxy", "relation": "implements" },
+    { "source": "reflective-method-invocation", "target": "advice", "relation": "depends_on" },
+    { "source": "aspect-creator", "target": "proxy-factory", "relation": "depends_on" },
+    { "source": "aspect-creator", "target": "reflective-method-invocation", "relation": "triggers" },
+    { "source": "target-source", "target": "proxy-factory", "relation": "depends_on" },
+    { "source": "introduction", "target": "advisor", "relation": "depends_on" },
+
+    { "source": "property-source", "target": "environment", "relation": "contains" },
+    { "source": "profile", "target": "environment", "relation": "depends_on" },
+    { "source": "post-processor-delegate", "target": "bean-post-processor", "relation": "depends_on" },
+    { "source": "post-processor-delegate", "target": "refresh", "relation": "triggers" },
+
+    { "source": "web-server-factory", "target": "web-server", "relation": "contains" },
+    { "source": "tomcat-embedded", "target": "web-server-factory", "relation": "implements" },
+    { "source": "tomcat-embedded", "target": "on-refresh", "relation": "triggers" },
+    { "source": "servlet-context-initializer", "target": "servlet-web-context", "relation": "depends_on" },
+
+    { "source": "data-source", "target": "jdbc", "relation": "contains" },
+    { "source": "jdbc-template", "target": "data-source", "relation": "depends_on" },
+    { "source": "transaction-manager", "target": "jdbc", "relation": "contains" },
+
+    { "source": "sql-session-factory", "target": "mybatis", "relation": "contains" },
+    { "source": "mapper-scanner", "target": "sql-session-factory", "relation": "depends_on" },
+    { "source": "mapper-scanner", "target": "factory-bean", "relation": "implements" },
+    { "source": "mapper-scan", "target": "component-scan", "relation": "depends_on" },
+
+    { "source": "handler-adapter", "target": "dispatcher-servlet", "relation": "depends_on" },
+    { "source": "view-resolver", "target": "dispatcher-servlet", "relation": "depends_on" },
+    { "source": "handler-interceptor", "target": "dispatcher-servlet", "relation": "depends_on" },
+    { "source": "servlet-filter", "target": "dispatcher-servlet", "relation": "depends_on" },
+
+    { "source": "dispatcher-handler", "target": "web-flux", "relation": "contains" },
+    { "source": "router-function", "target": "dispatcher-handler", "relation": "depends_on" },
+
+    { "source": "launched-url-class-loader", "target": "fat-jar", "relation": "contains" },
+    { "source": "jar-launcher", "target": "fat-jar", "relation": "contains" },
+    { "source": "jar-launcher", "target": "launched-url-class-loader", "relation": "depends_on" }
   ]
 }

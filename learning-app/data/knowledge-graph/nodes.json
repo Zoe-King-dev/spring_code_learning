@@ -59,6 +59,47 @@
     { "id": "reactor", "label": "Reactor (Mono/Flux)", "chapterId": "13", "type": "class", "description": "异步流的核心类型" },
 
     { "id": "fat-jar", "label": "可执行 jar", "chapterId": "14", "type": "concept", "description": "BOOT-INF 结构 + LaunchedURLClassLoader" },
-    { "id": "graceful-shutdown", "label": "优雅停机", "chapterId": "14", "type": "mechanism", "description": "server.shutdown=graceful，等待请求完成" }
+    { "id": "graceful-shutdown", "label": "优雅停机", "chapterId": "14", "type": "mechanism", "description": "server.shutdown=graceful，等待请求完成" },
+
+    { "id": "bean-wrapper", "label": "BeanWrapper", "chapterId": "03", "type": "class", "description": "提供类型转换与属性访问，Bean 填充属性的实际操作者" },
+    { "id": "factory-bean", "label": "FactoryBean", "chapterId": "03", "type": "class", "description": "通过 getObject() 暴露自定义 Bean 的工厂接口" },
+    { "id": "resource-loader", "label": "ResourceLoader", "chapterId": "03", "type": "class", "description": "统一加载 classpath:/file:/http: 等各种资源" },
+    { "id": "type-conversion", "label": "类型转换", "chapterId": "03", "type": "mechanism", "description": "ConversionService + PropertyEditor，@Value 注入时的隐式转换" },
+
+    { "id": "pointcut", "label": "Pointcut", "chapterId": "05", "type": "class", "description": "切点，定义哪些方法会被拦截（ClassFilter + MethodMatcher）" },
+    { "id": "advice", "label": "Advice", "chapterId": "05", "type": "class", "description": "通知，定义拦截到方法后做什么（前置/后置/环绕/异常）" },
+    { "id": "joinpoint", "label": "JoinPoint", "chapterId": "05", "type": "class", "description": "连接点，AOP 中可被拦截的程序执行点" },
+    { "id": "proxy-factory", "label": "ProxyFactory", "chapterId": "09", "type": "class", "description": "编程式创建 AOP 代理的工厂入口" },
+    { "id": "aop-proxy", "label": "AopProxy", "chapterId": "09", "type": "class", "description": "代理抽象，JDK/CGLIB 两种实现都封装在此接口之下" },
+    { "id": "reflective-method-invocation", "label": "ReflectiveMethodInvocation", "chapterId": "09", "type": "class", "description": "拦截器链的执行器，递归调用所有 Advice" },
+    { "id": "introduction", "label": "Introduction", "chapterId": "05", "type": "mechanism", "description": "引介增强，给目标对象动态添加接口实现" },
+    { "id": "target-source", "label": "TargetSource", "chapterId": "09", "type": "class", "description": "被代理对象的来源抽象（单例/原型/线程局部等）" },
+
+    { "id": "property-source", "label": "PropertySource", "chapterId": "06", "type": "class", "description": "属性源，Environment 中每一份配置都是一个 PropertySource" },
+    { "id": "profile", "label": "Profile", "chapterId": "06", "type": "mechanism", "description": "环境隔离机制，@Profile 与 spring.profiles.active 控制 Bean 生效环境" },
+    { "id": "post-processor-delegate", "label": "PostProcessorRegistrationDelegate", "chapterId": "07", "type": "class", "description": "refresh 阶段注册各种 BeanPostProcessor 的辅助类" },
+
+    { "id": "web-server-factory", "label": "WebServerFactory", "chapterId": "08", "type": "class", "description": "嵌入式 Web 容器的工厂接口" },
+    { "id": "tomcat-embedded", "label": "TomcatEmbeddedWebappContext", "chapterId": "08", "type": "class", "description": "嵌入式 Tomcat 与 Spring 上下文桥接" },
+    { "id": "servlet-context-initializer", "label": "ServletContextInitializer", "chapterId": "08", "type": "class", "description": "容器启动时对 ServletContext 的回调扩展" },
+    { "id": "servlet-filter", "label": "Filter", "chapterId": "12", "type": "class", "description": "Servlet 过滤器，WebMvc 三大组件之一" },
+
+    { "id": "data-source", "label": "DataSource", "chapterId": "10", "type": "class", "description": "JDBC 数据源接口，自动装配根据 classpath 选择实现" },
+    { "id": "jdbc-template", "label": "JdbcTemplate", "chapterId": "10", "type": "class", "description": "Spring JDBC 核心模板，封装 Connection/Statement 样板代码" },
+    { "id": "transaction-manager", "label": "PlatformTransactionManager", "chapterId": "10", "type": "class", "description": "Spring 事务抽象，@Transactional 由其子类实现" },
+
+    { "id": "sql-session-factory", "label": "SqlSessionFactory", "chapterId": "11", "type": "class", "description": "MyBatis 核心工厂，加载全局配置与 Mapper" },
+    { "id": "mapper-scanner", "label": "MapperScannerConfigurer", "chapterId": "11", "type": "class", "description": "扫描 Mapper 接口并注册为 FactoryBean" },
+    { "id": "mapper-scan", "label": "@MapperScan", "chapterId": "11", "type": "annotation", "description": "Mapper 扫描注解，触发 MapperScannerConfigurer" },
+
+    { "id": "handler-adapter", "label": "HandlerAdapter", "chapterId": "12", "type": "class", "description": "DispatcherServlet 调度 Handler 的执行器" },
+    { "id": "view-resolver", "label": "ViewResolver", "chapterId": "12", "type": "class", "description": "将逻辑视图名解析为物理视图对象" },
+    { "id": "handler-interceptor", "label": "HandlerInterceptor", "chapterId": "12", "type": "class", "description": "Handler 拦截器，三种回调：preHandle/postHandle/afterCompletion" },
+
+    { "id": "router-function", "label": "RouterFunction", "chapterId": "13", "type": "class", "description": "WebFlux 函数式路由声明" },
+    { "id": "dispatcher-handler", "label": "DispatcherHandler", "chapterId": "13", "type": "class", "description": "WebFlux 中心调度器，对应 WebMvc 的 DispatcherServlet" },
+
+    { "id": "launched-url-class-loader", "label": "LaunchedURLClassLoader", "chapterId": "14", "type": "class", "description": "BOOT-INF/lib 与 BOOT-INF/classes 的统一类加载器" },
+    { "id": "jar-launcher", "label": "JarLauncher", "chapterId": "14", "type": "class", "description": "可执行 jar 的启动入口，按 BOOT-INF 结构展开类路径" }
   ]
 }

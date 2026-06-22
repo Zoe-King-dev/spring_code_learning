@@ -1,0 +1,57 @@
+{
+  "chapterId": "09",
+  "title": "AnnotationAwareAspectJAutoProxyCreator 创建 AOP 代理 步进式调用链",
+  "description": "Bean 初始化阶段触发 AOP 代理织入：从筛选 Advisor 到选择 JDK/CGLIB 策略的完整流程。",
+  "steps": [
+    {
+      "method": "initializeBean → BPP.after",
+      "code": "// AbstractAutowireCapableBeanFactory.initializeBean()\nif (mbd != null && bean.getClass() != NullBean.class) {\n    Object wrappedBean = applyBeanPostProcessorsAfterInitialization(bean, beanName);\n}",
+      "note": "1/10 Bean 初始化最后一步触发 BPP.afterInitialization。AOP 代理在此织入。"
+    },
+    {
+      "method": "AnnotationAwareAspectJAutoProxyCreator.postProcessAfterInitialization()",
+      "code": "public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {\n    if (bean != null) {\n        Object cacheKey = getCacheKey(bean.getClass(), beanName);\n        if (!this.earlyProxyReferences.contains(cacheKey)) {\n            return wrapIfNecessary(bean, beanName, cacheKey);\n        }\n    }\n    return bean;\n}",
+      "note": "2/10 AOP 自动代理创建器的入口。检查 earlyProxyReferences 避免循环依赖时重复代理。"
+    },
+    {
+      "method": "wrapIfNecessary(bean, beanName, cacheKey)",
+      "code": "protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {\n    if (beanName != null && this.targetSourcedBeans.contains(beanName)) return bean;\n    if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) return bean;\n    if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {\n        this.advisedBeans.put(cacheKey, Boolean.FALSE);\n        return bean;\n    }\n    Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);\n    if (specificInterceptors != DO_NOT_PROXY) {\n        this.advisedBeans.put(cacheKey, Boolean.TRUE);\n        Object proxy = createProxy(bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));\n        this.proxyTypes.put(cacheKey, proxy.getClass());\n        return proxy;\n    }\n    this.advisedBeans.put(cacheKey, Boolean.FALSE);\n    return bean;\n}",
+      "note": "3/10 ⭐ 核心判断：找到至少一个适用于当前 Bean 的 Advisor，才创建代理；基础设施 Bean 直接跳过。"
+    },
+    {
+      "method": "getAdvicesAndAdvisorsForBean()",
+      "code": "protected Object[] getAdvicesAndAdvisorsForBean(Class<?> beanClass, String beanName, TargetSource targetSource) {\n    List<Advisor> advisors = findEligibleAdvisors(beanClass, beanName);\n    if (advisors.isEmpty()) return DO_NOT_PROXY;\n    return advisors.toArray();\n}",
+      "note": "4/10 找到适用于当前 Bean 的所有 Advisor。若为空，说明不需要代理。"
+    },
+    {
+      "method": "findEligibleAdvisors()",
+      "code": "protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName) {\n    List<Advisor> candidateAdvisors = findCandidateAdvisors();      // 全部 Advisor\n    List<Advisor> eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);\n    extendAdvisors(eligibleAdvisors);\n    return eligibleAdvisors;\n}",
+      "note": "5/10 候选 → 适用：先找出所有 Advisor（@Aspect 解析产物），再用 Pointcut 过滤出能匹配当前 Bean 的。"
+    },
+    {
+      "method": "createProxy()",
+      "code": "protected Object createProxy(Class<?> beanClass, String beanName, Object[] specificInterceptors, TargetSource targetSource) {\n    ProxyFactory proxyFactory = new ProxyFactory();\n    proxyFactory.copyFrom(this);\n    if (!proxyFactory.isProxyTargetClass()) {\n        evaluateProxyInterfaces(beanClass, proxyFactory);\n    }\n    Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);\n    proxyFactory.addAdvisors(advisors);\n    proxyFactory.setTargetSource(targetSource);\n    return proxyFactory.getProxy(proxyFactory.getProxyClassLoader());\n}",
+      "note": "6/10 ⭐ 委托给 ProxyFactory：拷贝全局配置、收集 Advisor、设置 TargetSource、最终生成代理。"
+    },
+    {
+      "method": "ProxyFactory.getProxy(classLoader)",
+      "code": "public Object getProxy(@Nullable ClassLoader classLoader) {\n    return createAopProxy().getProxy(classLoader);\n}",
+      "note": "7/10 通过 AopProxyFactory 创建 AopProxy（JDK 或 CGLIB），再调用其 getProxy(classLoader) 生成代理对象。"
+    },
+    {
+      "method": "DefaultAopProxyFactory.createAopProxy()",
+      "code": "public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {\n    if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {\n        Class<?> targetClass = config.getTargetClass();\n        if (targetClass == null) throw ...;\n        if (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) {\n            return new JdkDynamicAopProxy(config);\n        }\n        return new ObjenesisCglibAopProxy(config);\n    } else {\n        return new JdkDynamicAopProxy(config);\n    }\n}",
+      "note": "8/10 ⭐ 策略选择：目标类是接口 / 已是代理类 → JDK；否则 CGLIB。spring.aop.proxy-target-class=true 强制 CGLIB。"
+    },
+    {
+      "method": "JdkDynamicAopProxy.getProxy() / CglibAopProxy.getProxy()",
+      "code": "// JdkDynamicAopProxy\nreturn Proxy.newProxyInstance(classLoader, proxiedInterfaces, this);\n\n// CglibAopProxy\nEnhancer enhancer = new Enhancer();\nenhancer.setSuperclass(proxyClass);\nenhancer.setCallback(new DynamicAdvisedInterceptor(this.advised));\nreturn enhancer.create();",
+      "note": "9/10 JDK 走 java.lang.reflect.Proxy.newProxyInstance；CGLIB 走 Enhancer 创建子类。"
+    },
+    {
+      "method": "代理对象返回 → 替换原始 Bean",
+      "code": "// initializeBean 的 BPP.after 返回 wrappedBean\nexposedObject = wrappedBean;  // 此时已经是代理对象\n// 回到 AbstractAutowireCapableBeanFactory，exposedObject 替换原始 bean",
+      "note": "10/10 代理对象替换原始 Bean 引用。后续所有依赖此 Bean 的注入都是代理，对方法调用自动走拦截器链。"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "chapterId": "08",
+  "title": "ServletWebServerApplicationContext 启动嵌入式 Tomcat 步进式调用链",
+  "description": "嵌入式 Web 容器在 refresh 第 11 步 onRefresh 触发，从工厂创建到 Connector 监听端口的完整流程。",
+  "steps": [
+    {
+      "method": "AbstractApplicationContext.refresh() 第 11 步",
+      "code": "// 第 9/13 步 onRefresh()\n@Override\nprotected void onRefresh() {\n    super.onRefresh();\n    try {\n        createWebServer();\n    } catch (Throwable ex) { ... }\n}",
+      "note": "1/9 refresh() 第 9 步 onRefresh 触发。ServletWebServerApplicationContext 重写此方法启动容器。"
+    },
+    {
+      "method": "createWebServer()",
+      "code": "private void createWebServer() {\n    WebServer webServer = this.webServer;\n    ServletContext servletContext = this.getServletContext();\n    if (webServer == null && servletContext == null) {\n        ServletWebServerFactory factory = getWebServerFactory();\n        this.webServer = factory.getWebServer(new ServletContextInitializer[]{...});\n    }\n    initPropertySources();\n}",
+      "note": "2/9 获取 WebServerFactory（Tomcat/Jetty/Undertow 由 classpath 决定），通过工厂创建 WebServer。"
+    },
+    {
+      "method": "getWebServerFactory()",
+      "code": "protected ServletWebServerFactory getWebServerFactory() {\n    String[] beanNames = getBeanFactory()\n        .getBeanNamesForType(ServletWebServerFactory.class);\n    return getBeanFactory().getBean(beanNames[0], ServletWebServerFactory.class);\n}",
+      "note": "3/9 从容器中获取 ServletWebServerFactory。它的子类（TomcatServletWebServerFactory 等）由 spring-autoconfigure 通过 @ConditionalOnClass 决定。"
+    },
+    {
+      "method": "TomcatServletWebServerFactory.getWebServer()",
+      "code": "public WebServer getWebServer(ServletContextInitializer... initializers) {\n    Tomcat tomcat = new Tomcat();\n    File baseDir = (this.baseDirectory != null) ? this.baseDirectory : createTempDir(\"tomcat\");\n    tomcat.setBaseDir(baseDir.getAbsolutePath());\n    Connector connector = new Connector(this.protocol);\n    tomcat.getService().addConnector(connector);\n    customizeConnector(connector);\n    tomcat.setConnector(connector);\n    tomcat.getHost().setAutoDeploy(false);\n    configureEngine(tomcat.getEngine());\n    return getTomcatWebServer(tomcat);\n}",
+      "note": "4/9 ⭐ 创建 Tomcat 实例、配置 Connector 与 Engine。这一步是 Tomcat 启动的核心装配。"
+    },
+    {
+      "method": "prepareContext(host, servletContext)",
+      "code": "private void prepareContext(Host host, ServletContext servletContext) {\n    TomcatEmbeddedContext ctx = new TomcatEmbeddedContext();\n    ctx.setName(\"TomcatEmbeddedContext\");\n    ctx.setParentClassLoader(this.getClass().getClassLoader());\n    // 注册 ServletContainerInitializer\n    ServletContextInitializer[] initializers = ...;\n    for (ServletContextInitializer initializer : initializers) {\n        initializer.onStartup(servletContext);\n    }\n    host.addChild(ctx);\n}",
+      "note": "5/9 创建 TomcatEmbeddedContext 并执行所有 ServletContextInitializer；Spring 借此把 DispatcherServlet 等注册为 Servlet。"
+    },
+    {
+      "method": "TomcatWebServer 初始化",
+      "code": "public class TomcatWebServer implements WebServer {\n    public TomcatWebServer(Tomcat tomcat, boolean autoStart) {\n        this.tomcat = tomcat;\n        this.autoStart = autoStart;\n        initialize();\n    }\n    private void initialize() throws WebServerException {\n        synchronized (this.monitor) {\n            addInstanceIdToEngineName();\n            Context context = findContext();\n            context.addLifecycleListener(event -> {\n                if (event.getType().equals(Lifecycle.START_EVENT)) { ... }\n            });\n            // 启动 Tomcat\n            this.tomcat.start();\n        }\n    }\n}",
+      "note": "6/9 TomcatWebServer 包装 Tomcat，调用 tomcat.start() 触发 Connector、Engine、Context 整个生命周期。"
+    },
+    {
+      "method": "Connector.start()",
+      "code": "public class Connector extends LifecycleMBeanBase {\n    @Override\n    protected void startInternal() throws LifecycleException {\n        ProtocolHandler protocolHandler = this.protocolHandler;\n        // NIO / NIO2 / APR\n        protocolHandler.start();  // 启动 NioEndpoint\n    }\n}",
+      "note": "7/9 ⭐ 启动 NioEndpoint，绑定 server.port 端口，开始监听客户端连接。"
+    },
+    {
+      "method": "ContextRefreshedEvent 发布",
+      "code": "// 回到 refresh() 第 12 步\nfinishRefresh();\npublishEvent(new ContextRefreshedEvent(this));",
+      "note": "8/9 容器启动完成，回到 refresh 主流程，发布 ContextRefreshedEvent。"
+    },
+    {
+      "method": "WebServerGracefulShutdownLifecycle 注册",
+      "code": "this.webServer = factory.getWebServer(...);\n// 同步注册优雅停机钩子\ngetBeanFactory().registerSingleton(\"webServerGracefulShutdownLifecycle\",\n    new WebServerGracefulShutdownLifecycle(this.webServer));",
+      "note": "9/9 注册优雅停机 Lifecycle（见 Ch14）。整个嵌入式 Tomcat 启动链路闭环。"
+    }
+  ]
+}

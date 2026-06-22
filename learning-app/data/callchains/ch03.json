@@ -1,0 +1,62 @@
+{
+  "chapterId": "03",
+  "title": "AbstractBeanFactory.getBean() 步进式调用链",
+  "description": "IOC 容器获取 Bean 的完整流程：缓存查找 → 父子委派 → 依赖检查 → 创建 → 初始化 → 注册。",
+  "steps": [
+    {
+      "method": "getBean(name)",
+      "code": "public Object getBean(String name) throws BeansException {\n    return doGetBean(name, null, null, false);\n}",
+      "note": "对外统一入口。getBean / getBean(类) 最终都路由到 doGetBean。"
+    },
+    {
+      "method": "transformedBeanName(name)",
+      "code": "String beanName = transformedBeanName(name);\n// 去掉 '&' 前缀（FactoryBean 标记），按 aliasMap 解析别名",
+      "note": "1/10 处理 BeanName：&xxx 表示 FactoryBean 本身；alias 还原为规范名。"
+    },
+    {
+      "method": "getSingleton(beanName)",
+      "code": "Object sharedInstance = getSingleton(beanName);\n// -> DefaultSingletonBeanRegistry.getSingleton()\n// 依次从 singletonObjects / earlySingletonObjects 查找",
+      "note": "2/10 ⭐ 一级/二级缓存查找：已创建完成的单例直接返回；早期引用用于解决循环依赖。"
+    },
+    {
+      "method": "getParentBeanFactory().getBean(name)",
+      "code": "if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {\n    return parentBeanFactory.getBean(name);\n}",
+      "note": "3/10 父子委派：当前容器没定义时，递归到 parentBeanFactory。"
+    },
+    {
+      "method": "dependsOn 检查",
+      "code": "String[] dependsOn = mbd.getDependsOn();\nfor (String dep : dependsOn) {\n    getBean(dep);  // 递归创建依赖 Bean\n    registerDependentBean(dep, beanName);\n}",
+      "note": "4/10 依赖检查：depends-on 强制先初始化依赖 Bean，并登记反向依赖用于销毁。"
+    },
+    {
+      "method": "createBean(beanName, mbd, args)",
+      "code": "return createBean(beanName, mbd, args);\n// -> AbstractAutowireCapableBeanFactory.createBean()",
+      "note": "5/10 ⭐ 进入创建流程。createBean 才是 Bean 实例化与初始化的实际战场。"
+    },
+    {
+      "method": "resolveBeforeInstantiation(beanName, mbd)",
+      "code": "Object bean = resolveBeforeInstantiation(beanName, mbd);\n// 调用 InstantiationAwareBeanPostProcessor.postProcessBeforeInstantiation\n// 若返回非 null，则调用 postProcessAfterInitialization",
+      "note": "6/10 InstantiationAwareBPP 短路：给 AOP 等场景一个机会在实例化前直接返回代理对象。"
+    },
+    {
+      "method": "doCreateBean(beanName, mbd, args)",
+      "code": "if (logger.isTraceEnabled()) logger.trace(\"Creating instance of bean '\" + beanName + \"'\");\nreturn doCreateBean(beanName, mbdToUse, args);",
+      "note": "7/10 真正动手：实例化 → 属性填充 → 初始化 → 注册销毁回调。"
+    },
+    {
+      "method": "createBeanInstance + populateBean",
+      "code": "instanceWrapper = createBeanInstance(beanName, mbd, args);  // 选构造器反射 newInstance()\napplyMergedBeanDefinitionPostProcessors(mbd, type, instanceWrapper);\npopulateBean(beanName, mbd, instanceWrapper);                  // BeanWrapper.setPropertyValues()",
+      "note": "8/10 实例化 + 属性填充：autowire 模式决定是用无参构造、byName 还是 byType；MergedBD 阶段 BPP 在此触发。"
+    },
+    {
+      "method": "initializeBean + registerDisposableBean",
+      "code": "exposedObject = initializeBean(beanName, exposedObject, mbd);\n// invokeAwareMethods -> BPP.before -> @PostConstruct -> InitializingBean -> init-method -> BPP.after\nregisterDisposableBeanIfNecessary(beanName, bean, mbd);",
+      "note": "9/10 ⭐ 初始化：完整 Bean 生命周期在此完成；AOP 代理在 BPP.after 织入。"
+    },
+    {
+      "method": "addSingleton(beanName, singletonObject)",
+      "code": "addSingleton(beanName, singletonObject);\n// -> DefaultSingletonBeanRegistry.addSingleton()\n// 写入 singletonObjects，删除 earlySingletonObjects / singletonFactories",
+      "note": "10/10 注册到一级缓存：创建完成，对外可见。三级缓存的循环依赖链路全部清空。"
+    }
+  ]
+}
