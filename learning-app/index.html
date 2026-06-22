@@ -565,7 +565,18 @@
 
       if (mode === 'learn') {
         this.enhanceContent();
+        this._showDevHint();
       }
+    },
+
+    // 学习模式尚在开发中；这里给用户一个明确反馈，避免按钮看似"无响应"
+    _showDevHint() {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = '学习模式尚在开发中，当前与阅读模式相同';
+      toast.classList.add('show');
+      clearTimeout(this._toastTimer);
+      this._toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
     },
 
     enhanceContent() {
@@ -573,8 +584,8 @@
       const content = document.getElementById('main-content');
       if (!content) return;
 
-      // 渲染 Mermaid 图表
-      content.querySelectorAll('.mermaid:not([data-rendered]').forEach(async (el) => {
+      // 渲染未渲染的 Mermaid 图表
+      content.querySelectorAll('.mermaid:not([data-rendered])').forEach(async (el) => {
         el.setAttribute('data-rendered', 'true');
         try {
           const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
